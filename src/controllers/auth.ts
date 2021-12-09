@@ -53,6 +53,8 @@ export const waitForRipeSession = async (waPage: Page) : Promise<boolean> => {
 }
 
 export const sessionDataInvalid = async (waPage: Page) : Promise<string> => {
+  await timeout(5000);
+
   await waPage
     .waitForFunction(
       '!window.getQrPng',

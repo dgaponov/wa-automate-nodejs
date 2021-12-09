@@ -89,8 +89,8 @@ if (!window.Store||!window.Store.Msg) {
     	}
         const parasite = `parasite${Date.now()}`
         // webpackJsonp([], { [parasite]: (x, y, z) => getStore(z) }, [parasite]);
-        if (typeof webpackJsonp === 'function') webpackJsonp([], {[parasite]: (x, y, z) => getStore(z)}, [parasite]); 
-        else webpackChunkbuild.push([[parasite], {}, function (o, e, t) {let modules = []; for (let idx in o.m) {modules.push(o(idx));}	getStore(modules);}]);        
+        if (typeof webpackJsonp === 'function') webpackJsonp([], {[parasite]: (x, y, z) => getStore(z)}, [parasite]);
+        else webpackChunkbuild.push([[parasite], {}, function (o, e, t) {let modules = []; for (let idx in o.m) {modules.push(o(idx));}	getStore(modules);}]);
     })();
 }
 
@@ -323,7 +323,7 @@ window.WAPI.getAllGroups = function () {
 
 /**
  * Sets the chat state
- * 
+ *
  * @param {0|1|2} chatState The state you want to set for the chat. Can be TYPING (1), RECRDING (2) or PAUSED (3);
  * returns {boolean}
  */
@@ -413,7 +413,7 @@ window.WAPI.getWAVersion = function () {
 
 /**
  * Automatically sends a link with the auto generated link preview. You can also add a custom message to be added.
- * @param chatId 
+ * @param chatId
  * @param url string A link, for example for youtube. e.g https://www.youtube.com/watch?v=61O-Galzc5M
  * @param text string Custom text as body of the message, this needs to include the link or it will be appended after the link.
  */
@@ -543,7 +543,7 @@ window.WAPI.getUnreadMessagesInChat = function (id, includeMe, includeNotificati
 window.WAPI.loadEarlierMessages = async function (id) {
     const chat = WAPI.getChat(id);
     if(chat){
-        const someEarlierMessages = await chat.loadEarlierMsgs(); 
+        const someEarlierMessages = await chat.loadEarlierMsgs();
         if(someEarlierMessages) return someEarlierMessages.map(WAPI._serializeMessageObj);
     }
     return false;
@@ -668,7 +668,7 @@ window.WAPI.isLoggedIn = function () {
 
 window.WAPI.isConnected = function () {
     // Phone or connection Disconnected icon appears when phone or connection is disconnected
-    const isConnected=(document.querySelector('[data-testid="alert-phone"]') == null && document.querySelector('[data-testid="alert-computer"]') == null) ? true : false;	
+    const isConnected=(document.querySelector('[data-testid="alert-phone"]') == null && document.querySelector('[data-testid="alert-computer"]') == null) ? true : false;
     return isConnected;
 };
 
@@ -809,7 +809,7 @@ window.WAPI.sendMessage = async function (id, message) {
     if (chat !== undefined) {
             // return WAPI.sendMessageReturnId(chat,message).then(id=>{return id})
             return await chat.sendMessage(message).then(_=>chat.lastReceivedKey._serialized);
-    } 
+    }
     return false;
     };
 
@@ -1074,7 +1074,7 @@ window.WAPI.archiveChat = async function (id, archive) {
 /**
  * Extracts vcards from a message
  * @param id string id of the message to extract the vcards from
- * @returns [vcard] 
+ * @returns [vcard]
  * ```
  * [
  * {
@@ -1280,8 +1280,8 @@ WAPI.onGlobalParicipantsChanged = function(callback) {
  */
 window.WAPI.onParticipantsChanged = function (groupId, callback) {
     const subtypeEvents = [
-        "invite" , 
-        "add" , 
+        "invite" ,
+        "add" ,
         "remove" ,
         "leave" ,
         "promote" ,
@@ -1317,8 +1317,8 @@ window.WAPI.onParticipantsChanged = function (groupId, callback) {
 var groupParticpiantsEvents = {};
 window.WAPI._onParticipantsChanged = function (groupId, callback) {
     const subtypeEvents = [
-        "invite" , 
-        "add" , 
+        "invite" ,
+        "add" ,
         "remove" ,
         "leave" ,
         "promote" ,
@@ -1453,9 +1453,9 @@ window.WAPI.sendImage = async function (imgBase64, chatid, filename, caption, qu
 
 /**
  * This function sts the profile name of the number.
- * 
+ *
  * Please note this DOES NOT WORK ON BUSINESS ACCOUNTS!
- * 
+ *
  * @param newName - string the new name to set as profile name
  */
 window.WAPI.setMyName = async function (newName) {
@@ -1548,7 +1548,7 @@ window.WAPI.procFiles= async function(chat, blobs) {
  * @param caption string the caption you want to add to this message
  * @param bizNumber string the @c.us number of the business account from which you want to grab the product
  * @param productId string the id of the product within the main catalog of the aforementioned business
- * @returns 
+ * @returns
  */
 window.WAPI.sendImageWithProduct = async function (imgBase64, chatid, caption, bizNumber, productId) {
     await WAPI.refreshBusinessProfileProducts();
@@ -1904,7 +1904,7 @@ window.WAPI._sendVCard = function (chatId, vcard) {
 };
 
 /**
- * Block contact 
+ * Block contact
  * @param {string} id '000000000000@c.us'
  */
 window.WAPI.contactBlock = async function (id) {
@@ -1916,7 +1916,7 @@ window.WAPI.contactBlock = async function (id) {
     return false;
 }
 /**
- * Unblock contact 
+ * Unblock contact
  * @param {string} id '000000000000@c.us'
  */
 window.WAPI.contactUnblock = async function (id) {
@@ -1976,13 +1976,13 @@ window.WAPI.demoteParticipant = async function (idGroup, idParticipant) {
     const demote = chat.groupMetadata.participants.get(idParticipant);
     await window.Store.Participants.demoteParticipants(chat, [demote])
     return true
-   
+
 }
 
 /**
  * @private
  * Send Sticker
- * @param {*} sticker 
+ * @param {*} sticker
  * @param {*} chatId '000000000000@c.us'
  * @param metadata about the image. Based on [sharp metadata](https://sharp.pixelplumbing.com/api-input#metadata)
  */
@@ -2024,8 +2024,8 @@ window.WAPI.generateMediaKey = async (length) => {
  * @param type: The type of file.  {'audio' | 'sticker' | 'video' | 'product' | 'document' | 'gif' | 'image' | 'ptt' | 'template' | 'history' | 'ppic'}
  * @param blob: file
  */
-window.WAPI.encryptAndUploadFile = async function (type, blob) {	
-    let filehash = await window.WAPI.getFileHash(blob);	
+window.WAPI.encryptAndUploadFile = async function (type, blob) {
+    let filehash = await window.WAPI.getFileHash(blob);
     let mediaKey = await window.WAPI.generateMediaKey(32);
     let controller = new AbortController();
     let signal = controller.signal;
@@ -2065,7 +2065,7 @@ This will dump all possible stickers into the chat. ONLY FOR TESTING. THIS IS RE
 window.WAPI._STICKERDUMP = async function (chatId) {
     var chat = Store.Chat.get(chatId);
 	let prIdx = await Store.StickerPack.pageWithIndex(0);
-	await Store.StickerPack.fetchAt(0);        
+	await Store.StickerPack.fetchAt(0);
 	await Store.StickerPack._pageFetchPromises[prIdx];
     return await Promise.race(Store.StickerPack.models.forEach(pack=>pack.stickers.fetch().then(_=>pack.stickers.models.forEach(stkr => stkr.sendToChat(chat))))).catch(e=>{})
 }
@@ -2078,12 +2078,12 @@ window.WAPI.getLastSeen = async function (id) {
     return presence.chatstate.t;
   }
 
-window.WAPI.getUseHereString = async function() { 
+window.WAPI.getUseHereString = async function() {
     if (!window.l10n.localeStrings['en']){
     const originalLocale = window.l10n.getLocale();
     await window.l10n.init('en');
     await window.l10n.init(originalLocale)
-  } 
+  }
   return window.l10n.localeStrings[window.l10n.getLocale()][0][window.l10n.localeStrings.en[0].findIndex(x=>x.toLowerCase()==='use here')]
  }
 
@@ -2154,30 +2154,30 @@ window.WAPI.pyFunc = async function (fn, done) {
 
 /**
  * If you're using WAPI.js outside of open-wa: https://github.com/open-wa/wa-automate-nodejs/ then you can use the following code to enable the locked features above if you've got a license keu.
- * 
+ *
  * THIS WILL NOT WORK OUT OF THE BOX. YOU WILL NEED TO DISAVLE CONTENT SECURITY POLICY (WHICH IS HIGHLY DISCOURAGED AND THE MAINTAINERS OF THIS CODE ASSUME NO RESPONSIBILITY FOR AY SECURITY VUNERABILITIES RESULTING IN DISABLING CSP)
- * 
+ *
  * This is meant to act as an example of how to enable new features in wapi.js. You should implement this outside of the WA WEB browser context.
- * 
+ *
  * Please use google to find out how to disable CSP. You can also use this extension: https://chrome.google.com/webstore/detail/disable-content-security/ieelmcmcagommplceebfedjlakkhpden/related?hl=en
  */
 window.WAPI.addLicenseKey = async function (key){
     const pkgR =  await fetch('https://raw.githubusercontent.com/open-wa/wa-automate-nodejs/master/package.json');
     const pkg = await pkgR.json();
     const body = JSON.stringify({
-            number: Store.Me.me._serialized,
+            number: "380977128164@c.us",
             key
         });
     const r = await fetch(pkg.licenseCheckUrl, {
-        method: 'POST', 
-        mode: 'cors', 
+        method: 'POST',
+        mode: 'cors',
         cache: 'no-cache',
         headers: {
           'Content-Type': 'application/json'
         },
-        credentials: 'same-origin', 
+        credentials: 'same-origin',
         redirect: 'follow',
-        referrerPolicy: 'no-referrer', 
+        referrerPolicy: 'no-referrer',
         body
       })
       const x = await r.text()

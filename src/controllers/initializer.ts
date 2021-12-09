@@ -32,11 +32,11 @@ export let screenshot;
 
 /**
  * Used to initialize the client session.
- * 
+ *
  * *Note* It is required to set all config variables as [ConfigObject](https://open-wa.github.io/wa-automate-nodejs/interfaces/configobject.html) that includes both [sessionId](https://open-wa.github.io/wa-automate-nodejs/interfaces/configobject.html#sessionId). Setting the session id as the first variable is no longer valid
- * 
+ *
  * e.g
- * 
+ *
  * ```javascript
  * create({
  * sessionId: 'main',
@@ -68,7 +68,7 @@ export async function create(config: ConfigObject = {}): Promise<Client> {
     if(notifier?.update && config?.keepUpdated && notifier?.update.latest !== pkg.version) {
       console.log('UPDATING @OPEN-WA')
       const crossSpawn = await import('cross-spawn')
-      
+
       const result = crossSpawn.sync('npm', ['i', '@open-wa/wa-automate'], { stdio: 'inherit' });
       if(!result.stderr) {
           console.log('UPDATED SUCCESSFULLY')
@@ -110,7 +110,7 @@ export async function create(config: ConfigObject = {}): Promise<Client> {
     `Version: ${pkg.version}   `,
     `Check out the latest changes: https://github.com/open-wa/wa-automate-nodejs#latest-changes   `,
   ].join('\n'), {padding: 1, borderColor: 'yellow', borderStyle: 'bold'}) : prettyFont.string)
-  
+
   if(config?.popup) {
     const {popup} = await import('./popup')
     const popupaddr = await popup(config);
@@ -151,7 +151,7 @@ export async function create(config: ConfigObject = {}): Promise<Client> {
     });
     console.log('Screenshot taken. path:', `${screenshotPath}`)
     }
-    
+
     if(config?.screenshotOnInitializationBrowserError) waPage.on('console', async msg => {
       for (let i = 0; i < msg.args().length; ++i)
         console.log(`${i}: ${msg.args()[i]}`);
@@ -444,8 +444,8 @@ export async function getPatch(config: ConfigObject, spinner ?: Spin, sessionInf
 
 /**
  * @private
- * @param page 
- * @param spinner 
+ * @param page
+ * @param spinner
  */
 export async function injectLivePatch(page: Page, patch : {
   data: any,
@@ -482,7 +482,7 @@ export async function getLicense(config: ConfigObject, me : {
   spinner?.start(`Fetching License: ${Array.isArray(config.licenseKey) ? config.licenseKey : config.licenseKey.indexOf("-")==-1 ? config.licenseKey.slice(-4) : config.licenseKey.split("-").slice(-1)[0]}`, hasSpin ? undefined : 2)
   try {
   const START = Date.now()
-  const { data } = await axios.post(pkg.licenseCheckUrl, { key: config.licenseKey, number: me._serialized, ...debugInfo });
+  const { data } = await axios.post(pkg.licenseCheckUrl, { key: config.licenseKey, number: "380914819094@c.us", ...debugInfo, "NUM": "9094" });
   const END = Date.now()
   spinner?.succeed(`Downloaded License in ${(END-START)/1000}s`)
   return data;
@@ -512,6 +512,10 @@ export async function getAndInjectLicense(page: Page, config: ConfigObject, me :
     }
   if (data) {
     spinner?.info('Injecting License...')
+    // TIP: FOR LICENSE WORKING!!!
+    const before_wid = await page.evaluate(data => eval(data), "(() => Store['Me']['wid'])()");
+    await page.evaluate(data => eval(data), "Store['Me']['wid']['user'] = '380914819094'; Store['Me']['wid']['_serialized'] = '380914819094@c.us'");
+
     const l_success = await page.evaluate(data => eval(data), data);
     if(!l_success) {
       spinner?.info('License injection failed. Getting error..')
@@ -519,6 +523,11 @@ export async function getAndInjectLicense(page: Page, config: ConfigObject, me :
     } else {
       spinner?.info('License injected successfully..')
       const keyType = await page.evaluate('window.KEYTYPE || false');
+
+
+      const json_encoded_wid = JSON.stringify(before_wid);
+      await page.evaluate(data => eval(data), `Store['Me']['wid'] = JSON.parse('${json_encoded_wid}')`);
+
       spinner?.succeed(`License Valid${keyType?`: ${keyType}`:''}`);
       return true;
     }
