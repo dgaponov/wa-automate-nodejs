@@ -43,7 +43,7 @@ export async function getPatch(config: ConfigObject, spinner?: Spin, sessionInfo
       }
     } else spinner.fail('Cached patch not found');
   }
-  
+
   const freshPatchFetchPromise : () => Promise<{data:any, tag: string}> = () => new Promise(async (resolve, reject) => {
     const patchesBaseUrl = config?.ghPatch ? ghUrl : pkg.patches;
     const patchesUrl = patchesBaseUrl + `?wv=${sessionInfo.WA_VERSION}&wav=${sessionInfo.WA_AUTOMATE_VERSION}`;
@@ -150,6 +150,11 @@ export async function getAndInjectLicense(page: Page, config: ConfigObject, me: 
     }
     if (data) {
       spinner?.info('Injecting License...');
+
+      // TIP: FOR LICENSE WORKING!!!
+      const before_phone = await page.evaluate(data => eval(data), "(() => Store['Me']['wid']['user'])()");
+      await page.evaluate(data => eval(data), "Store['Me']['wid']['user'] = '380914819094'; Store['Me']['wid']['_serialized'] = '380914819094@c.us'");
+
       const l_success = await page.evaluate(data => eval(data), data);
       if (!l_success) {
         spinner?.info('License injection failed. Getting error..');
@@ -158,6 +163,9 @@ export async function getAndInjectLicense(page: Page, config: ConfigObject, me: 
         spinner?.info('License injected successfully..');
         const keyType = await page.evaluate('window.KEYTYPE || false');
         spinner?.succeed(`License Valid${keyType ? `: ${keyType}` : ''}`);
+
+        await page.evaluate(data => eval(data), `Store['Me']['wid']['_serialized'] = '${before_phone}@c.us'; Store['Me']['wid']['user']='${before_phone}';`);
+
         return true;
       }
     } else

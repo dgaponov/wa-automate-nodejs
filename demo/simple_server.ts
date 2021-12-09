@@ -42,7 +42,7 @@ async function start(client:Client){
   client.onIncomingCall(wh('incoming_call'))
   client.onPlugged(wh('plugged'))
   client.onStateChanged(wh('state'))
-  
+
   //this is only for insiders
   client.onRemovedFromGroup(wh('removed_from_group'))
 
@@ -52,7 +52,20 @@ async function start(client:Client){
 }
 
 create({
-    sessionId:'session1'
+    sessionId:'session-new',
+    headless: false,
+    qrTimeout: 600,
+    authTimeout: 60,
+    multiDevice: false,
+    disableSpins: true,
+    inDocker: true,
+    autoRefresh: true,
+    cacheEnabled: false,
+    killProcessOnTimeout: false,
+    killProcessOnBrowserClose: false,
+    // sets restartOnCrash to the above `start` function
+//    licenseKey: '80FCACAB-D8604462-88BD85DD-0229B2F5',
+    customUserAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.55 Safari/537.36'
 })
   .then(async client => await start(client))
   .catch(e=>{

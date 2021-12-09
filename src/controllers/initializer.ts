@@ -31,11 +31,11 @@ export let screenshot;
 
 /**
  * Used to initialize the client session.
- * 
+ *
  * *Note* It is required to set all config variables as [ConfigObject](https://open-wa.github.io/wa-automate-nodejs/interfaces/configobject.html) that includes both [sessionId](https://open-wa.github.io/wa-automate-nodejs/interfaces/configobject.html#sessionId). Setting the session id as the first variable is no longer valid
- * 
+ *
  * e.g
- * 
+ *
  * ```javascript
  * create({
  * sessionId: 'main',
@@ -67,7 +67,7 @@ export async function create(config: ConfigObject = {}): Promise<Client> {
     if(notifier?.update && config?.keepUpdated && notifier?.update.latest !== pkg.version) {
       console.log('UPDATING @OPEN-WA')
       const crossSpawn = await import('cross-spawn')
-      
+
       const result = crossSpawn.sync('npm', ['i', '@open-wa/wa-automate'], { stdio: 'inherit' });
       if(!result.stderr) {
           console.log('UPDATED SUCCESSFULLY')
@@ -109,7 +109,7 @@ export async function create(config: ConfigObject = {}): Promise<Client> {
     `Version: ${pkg.version}   `,
     `Check out the latest changes: https://github.com/open-wa/wa-automate-nodejs#latest-changes   `,
   ].join('\n'), {padding: 1, borderColor: 'yellow', borderStyle: 'bold'}) : prettyFont.string)
-  
+
   if(config?.popup) {
     const {popup} = await import('./popup')
     const popupaddr = await popup(config);
@@ -150,7 +150,7 @@ export async function create(config: ConfigObject = {}): Promise<Client> {
     });
     console.log('Screenshot taken. path:', `${screenshotPath}`)
     }
-    
+
     if(config?.screenshotOnInitializationBrowserError) waPage.on('console', async msg => {
       for (let i = 0; i < msg.args().length; ++i)
         console.log(`${i}: ${msg.args()[i]}`);

@@ -59,8 +59,10 @@ export const sessionDataInvalid = async (waPage: Page) : Promise<string> => {
       '!window.getQrPng',
       { timeout: 0, polling: 'mutation' }
     )
-    //if the code reaches here it means the browser was refreshed. Nuke the session data and restart `create`
-    return 'NUKE';
+
+
+  //if the code reaches here it means the browser was refreshed. Nuke the session data and restart `create`
+  return 'NUKE';
 }
 
 export const phoneIsOutOfReach = async (waPage: Page) : Promise<boolean>  => {
