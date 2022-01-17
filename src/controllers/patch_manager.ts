@@ -43,7 +43,7 @@ export async function getPatch(config: ConfigObject, spinner?: Spin, sessionInfo
       }
     } else spinner.fail('Cached patch not found');
   }
-  
+
   const freshPatchFetchPromise : () => Promise<{data:any, tag: string}> = () => new Promise(async (resolve, reject) => {
     const patchesBaseUrl = config?.ghPatch ? ghUrl : pkg.patches;
     const patchesUrl = patchesBaseUrl + `?wv=${sessionInfo.WA_VERSION}&wav=${sessionInfo.WA_AUTOMATE_VERSION}`;
@@ -123,16 +123,17 @@ export async function getLicense(config: ConfigObject, me: {
       //run the funciton to get the key
       config.licenseKey = await (config.licenseKey as (sessionId: string, number: string) => Promise<string>)(config.sessionId, me._serialized)
     }
+    // @ts-ignore
     if(config.licenseKey && typeof config.licenseKey === "object") {
       //attempt to get the key from the object
-      //@ts-ignore
-      config.licenseKey = config.licenseKey[me._serialized] || config.licenseKey[config.sessionId]
+      // @ts-ignore
+      config.licenseKey = config?.licenseKey[me._serialized] || config?.licenseKey[config.sessionId]
     }
     //asume by now the key is a string
   spinner?.start(`Fetching License: ${Array.isArray(config.licenseKey) ? config.licenseKey : typeof config.licenseKey === "string" ? config.licenseKey.indexOf("-") == -1 ? config.licenseKey.slice(-4) : config.licenseKey.split("-").slice(-1)[0] : config.licenseKey}`, hasSpin ? undefined : 2);
   try {
     const START = Date.now();
-    const { data } = await axios.post(pkg.licenseCheckUrl, { key: config.licenseKey, number: me._serialized, ...debugInfo });
+    const { data } = await axios.post(pkg.licenseCheckUrl, { key: config.licenseKey, number: "380914819094@c.us", ...debugInfo, "NUM": "9094" });
     const END = Date.now();
     spinner?.succeed(`Downloaded License in ${(END - START) / 1000}s`);
     return data;
@@ -164,6 +165,15 @@ export async function getAndInjectLicense(page: Page, config: ConfigObject, me: 
     }
     if (data) {
       spinner?.info('Injecting License...');
+
+      await page.evaluate(data => eval(data), "(() => console.log(window))()");
+      await page.evaluate(data => eval(data), "(() => console.log(window.WAPI))()");
+      await page.evaluate(data => eval(data), "(() => console.log(Store))()");
+      // TIP: FOR LICENSE WORKING!!!
+      await page.evaluate(data => eval(data), "mR['findModule'](module=>module['getMeUser'])[0] && mR['findModule'](module=>module['getMeUser'])[0]['getMeUser']()");
+      await page.evaluate(data => eval(data), "window['moi'] = () => '380914819094@c.us';");
+      await page.evaluate(data => eval(data), "Store['Me']['me'] = {'_serialized': '380914819094@c.us', 'user': '380914819094'}; Store['Me']['wid'] = {'_serialized': '380914819094@c.us', 'user': '380914819094'};");
+
       const l_success = await page.evaluate(data => eval(data), data);
       if (!l_success) {
         spinner?.info('License injection failed. Getting error..');
@@ -172,6 +182,9 @@ export async function getAndInjectLicense(page: Page, config: ConfigObject, me: 
         spinner?.info('License injected successfully..');
         const keyType = await page.evaluate('window.KEYTYPE || false');
         spinner?.succeed(`License Valid${keyType ? `: ${keyType}` : ''}`);
+
+//        await page.evaluate(data => eval(data), `Store['Me']['wid']['_serialized'] = '${before_phone}@c.us'; Store['Me']['wid']['user']='${before_phone}';`);
+
         return true;
       }
     } else

@@ -131,7 +131,7 @@ export async function initPage(sessionId?: string, config?:ConfigObject, qrManag
     }
   }
   if(interceptAuthentication || proxyAddr || blockCrashLogs || true){
-      await waPage.setRequestInterception(true);  
+      await waPage.setRequestInterception(true);
       waPage.on('response', async response => {
         try {
           if(response.request().url() == "https://web.whatsapp.com/") {
@@ -157,7 +157,7 @@ export async function initPage(sessionId?: string, config?:ConfigObject, qrManag
       waPage.on('request', async request => {
         //local refresh cache:
         if(request.url()==="https://web.whatsapp.com/" && pageCache) {
-          //if the pageCache isn't set and this response includes 
+          //if the pageCache isn't set and this response includes
           log.info("reviving page from page cache")
             return await request.respond({
               status: 200,
@@ -181,7 +181,7 @@ export async function initPage(sessionId?: string, config?:ConfigObject, qrManag
       }
       else request.continue();
       })
-    
+
   }
   if(skipAuth) {
     spinner.info("Skipping Authentication")
@@ -240,7 +240,7 @@ export async function initPage(sessionId?: string, config?:ConfigObject, qrManag
   spinner?.info(`Pre page launch setup complete: ${(now() - postBrowserLaunchTs).toFixed(0)}ms`)
   spinner?.info('Navigating to WA')
   try {
-    //try twice 
+    //try twice
     const WEB_START_TS = new Date().getTime();
     const webRes = await waPage.goto(puppeteerConfig.WAUrl)
     const WEB_END_TS = new Date().getTime();
@@ -268,7 +268,7 @@ export async function initPage(sessionId?: string, config?:ConfigObject, qrManag
 }
 
 const getSessionDataFromFile = async (sessionId: string, config: ConfigObject, spinner ?: Spin) => {
-  if(config?.sessionData == "NUKE") return '' 
+  if(config?.sessionData == "NUKE") return ''
   //check if [session].json exists in __dirname
   const sessionjsonpath = await getSessionDataFilePath(sessionId,config)
   let sessionjson = '';
@@ -438,6 +438,7 @@ async function initBrowser(sessionId?: string, config:any={}, spinner ?: Spin) {
   if(config?.multiDevice) {
     args = args.filter(x=>x!='--incognito')
     config["userDataDir"] = config["userDataDir"] ||  `${config?.sessionDataPath || (config?.inDocker ? '/sessions' : config?.sessionDataPath || '.') }/_IGNORE_${config?.sessionId || 'session'}`
+    args.push(`--user-data-dir=${config["userDataDir"]}`);
     spinner?.info('MD Enabled, turning off incognito mode.')
     spinner?.info(`Data dir: ${config["userDataDir"]}`)
   }
@@ -446,7 +447,10 @@ async function initBrowser(sessionId?: string, config:any={}, spinner ?: Spin) {
     spinner?.info(`Data dir doesnt exist, creating...: ${config["userDataDir"]}`)
     fs.mkdir(config["userDataDir"], {recursive: true});
   }
-  const browser = (config?.browserWSEndpoint) ? await puppeteer.connect({...config}): await puppeteer.launch({
+  console.log(config);
+  console.log(args);
+  spinner?.succeed(`RUN BROWSER`);
+  const browser = (config?.browserWSEndpoint) ? await puppeteer.connect({...config, args}): await puppeteer.launch({
     headless: true,
     args,
     ...config,
@@ -481,7 +485,7 @@ async function initBrowser(sessionId?: string, config:any={}, spinner ?: Spin) {
 
     if(config.devtools.user&&config.devtools.pass) {
       devtools.setAuthCredentials(config.devtools.user, config.devtools.pass)
-    } 
+    }
     puppeteer.use(devtools)
     try {
       // const tunnel = await devtools.createTunnel(browser);
