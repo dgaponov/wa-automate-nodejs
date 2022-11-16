@@ -1,7 +1,8 @@
 /// <reference types="node" />
-import { ConfigObject, DataURL } from '../api/model';
+import { AdvancedFile, ConfigObject, DataURL } from '../api/model';
 import { AxiosRequestConfig } from 'axios';
 import { SessionInfo } from '../api/model/sessionInfo';
+import { Readable } from "stream";
 export declare const timeout: (ms: any) => Promise<unknown>;
 /**
  *  Use this to generate a more likely valid user agent. It makes sure it has the WA part and replaces any windows or linux os info with mac.
@@ -81,6 +82,54 @@ export declare const generateGHIssueLink: (config: ConfigObject, sessionInfo: Se
  * download it and convert it to a DataURL. If Base64, returns it.
  * @param {string} file - The file to be converted to a DataURL.
  * @param {AxiosRequestConfig} requestConfig - AxiosRequestConfig = {}
+ * @param {string} filename - Filename with an extension so a datauri mimetype can be inferred.
  * @returns A DataURL
  */
-export declare const ensureDUrl: (file: string, requestConfig?: AxiosRequestConfig) => Promise<string>;
+export declare const ensureDUrl: (file: string | Buffer, requestConfig?: AxiosRequestConfig, filename?: string) => Promise<string>;
+export declare const FileInputTypes: {
+    VALIDATED_FILE_PATH: string;
+    URL: string;
+    DATA_URL: string;
+    BASE_64: string;
+    BUFFER: string;
+    READ_STREAM: string;
+};
+export declare const FileOutputTypes: {
+    TEMP_FILE_PATH: string;
+    VALIDATED_FILE_PATH: string;
+    URL: string;
+    DATA_URL: string;
+    BASE_64: string;
+    BUFFER: string;
+    READ_STREAM: string;
+};
+/**
+ * Remove file asynchronously
+ * @param file Filepath
+ * @returns
+ */
+export declare function rmFileAsync(file: string): Promise<unknown>;
+/**
+ * Takes a file parameter and consistently returns the desired type of file.
+ * @param file The file path, URL, base64 or DataURL string of the file
+ * @param outfileName The ouput filename of the file
+ * @param desiredOutputType The type of file output required from this function
+ * @param requestConfig optional axios config if file parameter is a url
+ */
+export declare const assertFile: (file: AdvancedFile | Buffer, outfileName: string, desiredOutputType: keyof typeof FileOutputTypes, requestConfig?: any) => Promise<string | Buffer | Readable>;
+/**
+ * Checks if a given path exists.
+ *
+ * If exists, returns the resolved absolute path. Otherwise returns false.
+ *
+ * @param _path a relative, absolute or homedir path to a folder or a file
+ * @param failSilent If you're expecting for the file to not exist and just want the `false` response then set this to true to prevent false-positive error messages in the logs.
+ * @returns string | false
+ */
+export declare const pathExists: (_path: string, failSilent?: boolean) => Promise<string | false>;
+/**
+ * Returns an absolute file path reference
+ * @param _path a relative, absolute or homedir path to a folder or a file
+ * @returns string
+ */
+export declare const fixPath: (_path: string) => string;

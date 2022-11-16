@@ -251,7 +251,7 @@ function create(config = {}) {
                 spinner.fail("Session data most likely expired due to manual host account logout. Please re-authenticate this session.");
                 yield (0, browser_1.kill)(waPage);
                 if (config === null || config === void 0 ? void 0 : config.deleteSessionDataOnLogout)
-                    (0, browser_1.deleteSessionData)(config);
+                    yield (0, browser_1.deleteSessionData)(config);
                 if (config === null || config === void 0 ? void 0 : config.throwOnExpiredSessionData) {
                     throw new index_1.SessionExpiredError();
                 }

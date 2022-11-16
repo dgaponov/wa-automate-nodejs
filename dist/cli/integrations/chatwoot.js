@@ -26,6 +26,9 @@ const convoReg = {
     //WID : chatwoot conversation ID
     "example@c.us": "1"
 };
+const ignoreMap = {
+    "example_message_id": true
+};
 exports.chatwoot_webhook_check_event_name = "cli.integrations.chatwoot.check";
 const chatwootMiddleware = (cliConfig, client) => {
     return (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -85,7 +88,13 @@ const chatwootMiddleware = (cliConfig, client) => {
                         promises.push(client.sendText(to, content));
                 }
             }
-            return yield Promise.all(promises);
+            const outgoingMessageIds = yield Promise.all(promises);
+            __1.log.info(`Outgoing message IDs: ${JSON.stringify(outgoingMessageIds)}`);
+            /**
+             * Add these message IDs to the ignore map
+             */
+            outgoingMessageIds.map(id => ignoreMap[`${id}`] = true);
+            return outgoingMessageIds;
         });
         try {
             const processAndSendResult = yield processMesssage();
@@ -252,7 +261,13 @@ const setupChatwootOutgoingMessageHandler = (cliConfig, client) => __awaiter(voi
             const { data } = yield cwReq('get', `contacts/${contactReg[number]}/conversations`);
             const allContactConversations = data.payload.filter(c => c.inbox_id === inboxId).sort((a, b) => a.id - b.id);
             const [opened, notOpen] = [allContactConversations.filter(c => c.status === 'open'), allContactConversations.filter(c => c.status != 'open')];
-            return opened[0] || notOpen[0];
+            const hasOpenConvo = opened[0] ? true : false;
+            const resolvedConversation = opened[0] || notOpen[0];
+            if (!hasOpenConvo) {
+                //reopen convo
+                yield openConversation(resolvedConversation.id);
+            }
+            return resolvedConversation;
         }
         catch (error) {
             return;
@@ -284,11 +299,22 @@ const setupChatwootOutgoingMessageHandler = (cliConfig, client) => __awaiter(voi
             return;
         }
     });
+    const openConversation = (conversationId, status = "opened") => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const { data } = yield cwReq('post', `conversations/${conversationId}/messages`, {
+                status
+            });
+            return data;
+        }
+        catch (error) {
+            return;
+        }
+    });
     const sendConversationMessage = (content, contactId, message) => __awaiter(void 0, void 0, void 0, function* () {
         try {
             const { data } = yield cwReq('post', `conversations/${convoReg[contactId]}/messages`, {
                 content,
-                "message_type": 0,
+                "message_type": message.fromMe ? "outgoing" : "incoming",
                 "private": false
             });
             return data;
@@ -316,37 +342,33 @@ const setupChatwootOutgoingMessageHandler = (cliConfig, client) => __awaiter(voi
             return;
         }
     });
-    // const inboxId = s.match(/conversations\/\d*/g) && s.match(/conversations\/\d*/g)[0].replace('conversations/','')
-    /**
-     * Update the chatwoot contact and conversation registries
-     */
-    const setOnMessageProm = client.onMessage((message) => __awaiter(void 0, void 0, void 0, function* () {
+    const processWAMessage = (message) => __awaiter(void 0, void 0, void 0, function* () {
         var _b;
-        if (message.from.includes('g')) {
+        if (message.chatId.includes('g')) {
             //chatwoot integration does not support group chats
             return;
         }
         /**
          * Does the contact exist in chatwoot?
          */
-        if (!contactReg[message.from]) {
-            const contact = yield searchContact(message.from);
+        if (!contactReg[message.chatId]) {
+            const contact = yield searchContact(message.chatId);
             if (contact) {
-                contactReg[message.from] = contact.id;
+                contactReg[message.chatId] = contact.id;
             }
             else {
                 //create the contact
-                contactReg[message.from] = (yield createContact(message.sender)).id;
+                contactReg[message.chatId] = (yield createContact(message.sender)).id;
             }
         }
-        if (!convoReg[message.from]) {
-            const conversation = yield getContactConversation(message.from);
+        if (!convoReg[message.chatId]) {
+            const conversation = yield getContactConversation(message.chatId);
             if (conversation) {
-                convoReg[message.from] = conversation.id;
+                convoReg[message.chatId] = conversation.id;
             }
             else {
                 //create the conversation
-                convoReg[message.from] = (yield createConversation(contactReg[message.from])).id;
+                convoReg[message.chatId] = (yield createConversation(contactReg[message.chatId])).id;
             }
         }
         /**
@@ -379,11 +401,28 @@ const setupChatwootOutgoingMessageHandler = (cliConfig, client) => __awaiter(voi
                 break;
         }
         if (hasAttachments)
-            yield sendAttachmentMessage(text, message.from, message);
+            yield sendAttachmentMessage(text, message.chatId, message);
         else
-            yield sendConversationMessage(text, message.from, message);
+            yield sendConversationMessage(text, message.chatId, message);
+    });
+    // const inboxId = s.match(/conversations\/\d*/g) && s.match(/conversations\/\d*/g)[0].replace('conversations/','')
+    /**
+     * Update the chatwoot contact and conversation registries
+     */
+    const setOnMessageProm = client.onMessage(processWAMessage);
+    const setOnAckProm = client.onAck((ackEvent) => __awaiter(void 0, void 0, void 0, function* () {
+        if (ackEvent.ack == 1 && ackEvent.isNewMsg && ackEvent.self === "in") {
+            if (ignoreMap[ackEvent.id]) {
+                delete ignoreMap[ackEvent.id];
+                return;
+            }
+            const _message = yield client.getMessageById(ackEvent.id);
+            return yield processWAMessage(_message);
+        }
+        return;
     }));
     proms.push(setOnMessageProm);
+    proms.push(setOnAckProm);
     yield Promise.all(proms);
     return;
 });

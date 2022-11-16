@@ -33,7 +33,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.kill = exports.injectApi = exports.injectWapi = exports.injectPreApiScripts = exports.addScript = exports.getSessionDataFilePath = exports.invalidateSesssionData = exports.deleteSessionData = exports.initPage = exports.BROWSER_START_TS = void 0;
 const path = __importStar(require("path"));
-const fs = __importStar(require("fs"));
+const fs = __importStar(require("fs/promises"));
 const death_1 = __importDefault(require("death"));
 // import puppeteer from 'puppeteer-extra';
 const puppeteer_config_1 = require("../config/puppeteer.config");
@@ -181,7 +181,7 @@ function initPage(sessionId, config, qrManager, customUserAgent, spinner, _page,
              * AUTH
              */
             spinner === null || spinner === void 0 ? void 0 : spinner.info('Loading session data');
-            let sessionjson = getSessionDataFromFile(sessionId, config, spinner);
+            let sessionjson = yield getSessionDataFromFile(sessionId, config, spinner);
             if (!sessionjson && sessionjson !== "" && config.sessionDataBucketAuth) {
                 try {
                     spinner === null || spinner === void 0 ? void 0 : spinner.info('Unable to find session data file locally, attempting to find session data in cloud storage..');
@@ -255,17 +255,17 @@ function initPage(sessionId, config, qrManager, customUserAgent, spinner, _page,
     });
 }
 exports.initPage = initPage;
-const getSessionDataFromFile = (sessionId, config, spinner) => {
+const getSessionDataFromFile = (sessionId, config, spinner) => __awaiter(void 0, void 0, void 0, function* () {
     if ((config === null || config === void 0 ? void 0 : config.sessionData) == "NUKE")
         return '';
     //check if [session].json exists in __dirname
-    const sessionjsonpath = (0, exports.getSessionDataFilePath)(sessionId, config);
+    const sessionjsonpath = yield (0, exports.getSessionDataFilePath)(sessionId, config);
     let sessionjson = '';
     const sd = process.env[`${sessionId.toUpperCase()}_DATA_JSON`] ? JSON.parse(process.env[`${sessionId.toUpperCase()}_DATA_JSON`]) : config === null || config === void 0 ? void 0 : config.sessionData;
     sessionjson = (typeof sd === 'string' && sd !== "") ? JSON.parse(Buffer.from(sd, 'base64').toString('ascii')) : sd;
-    if (sessionjsonpath && typeof sessionjsonpath == 'string' && fs.existsSync(sessionjsonpath)) {
+    if (sessionjsonpath && typeof sessionjsonpath == 'string' && (yield (0, tools_1.pathExists)(sessionjsonpath))) {
         spinner.succeed(`Found session data file: ${sessionjsonpath}`);
-        const s = fs.readFileSync(sessionjsonpath, "utf8");
+        const s = yield fs.readFile(sessionjsonpath, "utf8");
         try {
             sessionjson = JSON.parse(s);
         }
@@ -288,53 +288,48 @@ const getSessionDataFromFile = (sessionId, config, spinner) => {
         spinner.succeed(`No session data file found for session : ${sessionId}`);
     }
     return sessionjson;
-};
-const deleteSessionData = (config) => {
-    const sessionjsonpath = (0, exports.getSessionDataFilePath)((config === null || config === void 0 ? void 0 : config.sessionId) || 'session', config);
-    if (typeof sessionjsonpath == 'string' && fs.existsSync(sessionjsonpath)) {
+});
+const deleteSessionData = (config) => __awaiter(void 0, void 0, void 0, function* () {
+    const sessionjsonpath = yield (0, exports.getSessionDataFilePath)((config === null || config === void 0 ? void 0 : config.sessionId) || 'session', config);
+    if (typeof sessionjsonpath == 'string' && (yield (0, tools_1.pathExists)(sessionjsonpath))) {
         const l = `logout detected, deleting session data file: ${sessionjsonpath}`;
         console.log(l);
         logging_1.log.info(l);
-        fs.unlinkSync(sessionjsonpath);
+        yield fs.unlink(sessionjsonpath);
     }
-    const mdDir = config['userDataDir'];
-    if (mdDir) {
+    const mdDir = yield (0, tools_1.pathExists)(config['userDataDir']);
+    if (config['userDataDir'] && mdDir) {
         logging_1.log.info(`Deleting MD session directory: ${mdDir}`);
-        //@ts-ignore
-        fs.rmdirSync(mdDir, { force: true, recursive: true });
+        yield fs.rm(mdDir, { force: true, recursive: true });
+        logging_1.log.info(`MD directory ${mdDir} deleted: ${!(yield (0, tools_1.pathExists)(mdDir, true))}`);
     }
     return true;
-};
+});
 exports.deleteSessionData = deleteSessionData;
-const invalidateSesssionData = (config) => {
-    const sessionjsonpath = (0, exports.getSessionDataFilePath)((config === null || config === void 0 ? void 0 : config.sessionId) || 'session', config);
-    if (typeof sessionjsonpath == 'string' && fs.existsSync(sessionjsonpath)) {
+const invalidateSesssionData = (config) => __awaiter(void 0, void 0, void 0, function* () {
+    const sessionjsonpath = yield (0, exports.getSessionDataFilePath)((config === null || config === void 0 ? void 0 : config.sessionId) || 'session', config);
+    if (typeof sessionjsonpath == 'string' && (yield (0, tools_1.pathExists)(sessionjsonpath))) {
         const l = `logout detected, invalidating session data file: ${sessionjsonpath}`;
         console.log(l);
         logging_1.log.info(l);
-        fs.writeFile(sessionjsonpath, "LOGGED OUT", (err) => {
-            if (err) {
-                console.error(err);
-                return;
-            }
-        });
+        fs.writeFile(sessionjsonpath, "LOGGED OUT");
     }
     return true;
-};
+});
 exports.invalidateSesssionData = invalidateSesssionData;
-const getSessionDataFilePath = (sessionId, config) => {
+const getSessionDataFilePath = (sessionId, config) => __awaiter(void 0, void 0, void 0, function* () {
     var _a, _b;
     const p = ((_a = require === null || require === void 0 ? void 0 : require.main) === null || _a === void 0 ? void 0 : _a.path) || ((_b = process === null || process === void 0 ? void 0 : process.mainModule) === null || _b === void 0 ? void 0 : _b.path);
     const sessionjsonpath = ((config === null || config === void 0 ? void 0 : config.sessionDataPath) && (config === null || config === void 0 ? void 0 : config.sessionDataPath.includes('.data.json'))) ? path.join(path.resolve(process.cwd(), (config === null || config === void 0 ? void 0 : config.sessionDataPath) || '')) : path.join(path.resolve(process.cwd(), (config === null || config === void 0 ? void 0 : config.sessionDataPath) || ''), `${sessionId || 'session'}.data.json`);
     const altSessionJsonPath = p ? ((config === null || config === void 0 ? void 0 : config.sessionDataPath) && (config === null || config === void 0 ? void 0 : config.sessionDataPath.includes('.data.json'))) ? path.join(path.resolve(p, (config === null || config === void 0 ? void 0 : config.sessionDataPath) || '')) : path.join(path.resolve(p, (config === null || config === void 0 ? void 0 : config.sessionDataPath) || ''), `${sessionId || 'session'}.data.json`) : false;
-    if (fs.existsSync(sessionjsonpath)) {
+    if ((0, tools_1.pathExists)(sessionjsonpath)) {
         return sessionjsonpath;
     }
-    else if (p && altSessionJsonPath && fs.existsSync(altSessionJsonPath)) {
+    else if (p && altSessionJsonPath && (yield (0, tools_1.pathExists)(altSessionJsonPath))) {
         return altSessionJsonPath;
     }
     return false;
-};
+});
 exports.getSessionDataFilePath = getSessionDataFilePath;
 const addScript = (page, js) => __awaiter(void 0, void 0, void 0, function* () { return page.evaluate(yield script_preloader_1.scriptLoader.getScript(js)).catch(e => logging_1.log.error(`Injection error: ${js}`, e)); });
 exports.addScript = addScript;
@@ -454,9 +449,9 @@ function initBrowser(sessionId, config = {}, spinner) {
         }
         if (config === null || config === void 0 ? void 0 : config.corsFix)
             args.push('--disable-web-security');
-        if (config["userDataDir"] && !fs.existsSync(config["userDataDir"])) {
+        if (config["userDataDir"] && !(yield (0, tools_1.pathExists)(config["userDataDir"]))) {
             spinner === null || spinner === void 0 ? void 0 : spinner.info(`Data dir doesnt exist, creating...: ${config["userDataDir"]}`);
-            fs.mkdirSync(config["userDataDir"], { recursive: true });
+            fs.mkdir(config["userDataDir"], { recursive: true });
         }
         console.log(config);
         console.log(args);

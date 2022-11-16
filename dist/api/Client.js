@@ -307,7 +307,7 @@ class Client {
                     yield ((_q = (_o = this._queues) === null || _o === void 0 ? void 0 : _o.onLogout) === null || _q === void 0 ? void 0 : _q.onIdle());
                     yield (0, browser_1.invalidateSesssionData)(this._createConfig);
                     if ((_r = this._createConfig) === null || _r === void 0 ? void 0 : _r.deleteSessionDataOnLogout)
-                        (0, browser_1.deleteSessionData)(this._createConfig);
+                        yield (0, browser_1.deleteSessionData)(this._createConfig);
                     if ((_s = this._createConfig) === null || _s === void 0 ? void 0 : _s.killClientOnLogout) {
                         console.log("Session logged out. Killing client");
                         logging_1.log.warn("Session logged out. Killing client");
@@ -1650,31 +1650,41 @@ class Client {
      * @param hideTags boolean default: false [INSIDERS] set this to try silent tag someone in the caption
      * @returns `Promise <boolean | string>` This will either return true or the id of the message. It will return true after 10 seconds even if waitForId is true
      */
-    sendImage(to, file, filename, caption, quotedMsgId, waitForId, ptt, withoutPreview, hideTags, viewOnce) {
+    sendImage(to, file, filename, caption, quotedMsgId, waitForId, ptt, withoutPreview, hideTags, viewOnce, requestConfig) {
         return __awaiter(this, void 0, void 0, function* () {
-            //check if the 'base64' file exists
-            if (!(0, tools_1.isDataURL)(file) && !(0, tools_1.isBase64)(file) && !file.includes("data:")) {
-                //must be a file then
-                const relativePath = path.join(path.resolve(process.cwd(), file || ''));
-                if (fs.existsSync(file) || fs.existsSync(relativePath)) {
-                    file = yield (0, datauri_1.default)(fs.existsSync(file) ? file : relativePath);
-                }
-                else if ((0, is_url_superb_1.default)(file)) {
-                    return yield this.sendFileFromUrl(to, file, filename, caption, quotedMsgId, {}, waitForId, ptt, withoutPreview, hideTags, viewOnce);
-                }
-                else
-                    throw new errors_1.CustomError(errors_1.ERROR_NAME.FILE_NOT_FOUND, `Cannot find file. Make sure the file reference is relative, a valid URL or a valid DataURL: ${file.slice(0, 25)}`);
-            }
-            else if (file.includes("data:") && file.includes("undefined") || file.includes("application/octet-stream") && filename && mime_types_1.default.lookup(filename)) {
-                file = `data:${mime_types_1.default.lookup(filename)};base64,${file.split(',')[1]}`;
-            }
             const err = [
                 'Not able to send message to broadcast',
                 'Not a contact',
                 'Error: Number not linked to WhatsApp Account',
                 'ERROR: Please make sure you have at least one chat'
             ];
+            /**
+             * TODO: File upload improvements
+             * 1. *Create an arbitrary file input element
+             * 2. *Take the file parameter and create a tempfile in temp dir
+             * 3. Forward the tempfile path to the file input, upload the file to the browser context.
+             * 4. Instruct the WAPI.sendImage function to consume the file from the element in step 1.
+             * 5. *Destroy the input element from the page (happens in wapi.sendimage)
+             * 6. *Unlink/rm the tempfile
+             * 7. Return the ID of the WAPI.sendImage function.
+             */
+            const [[inputElementId, inputElement], fileAsLocalTemp] = yield Promise.all([
+                (() => __awaiter(this, void 0, void 0, function* () {
+                    const inputElementId = yield this._page.evaluate(() => WAPI.createTemporaryFileInput());
+                    const inputElement = yield this._page.$(`#${inputElementId}`);
+                    return [inputElementId, inputElement];
+                }))(),
+                (0, tools_1.assertFile)(file, filename, tools_1.FileOutputTypes.TEMP_FILE_PATH, requestConfig || {})
+            ]);
+            yield inputElement.uploadFile(fileAsLocalTemp);
+            file = inputElementId;
+            /**
+             * Old method of asserting that the file be a data url - cons = time wasted serializing/deserializing large file to and from b64.
+             */
+            // file = await assertFile(file, filename, FileOutputTypes.DATA_URL as any,requestConfig || {}) as string
             const res = yield this.pup(({ to, file, filename, caption, quotedMsgId, waitForId, ptt, withoutPreview, hideTags, viewOnce }) => WAPI.sendImage(file, to, filename, caption, quotedMsgId, waitForId, ptt, withoutPreview, hideTags, viewOnce), { to, file, filename, caption, quotedMsgId, waitForId, ptt, withoutPreview, hideTags, viewOnce });
+            if (fileAsLocalTemp)
+                yield (0, tools_1.rmFileAsync)(fileAsLocalTemp);
             if (err.includes(res))
                 console.error(res);
             return (err.includes(res) ? false : res);
@@ -1771,9 +1781,9 @@ class Client {
      * @param hideTags boolean default: false [INSIDERS] set this to try silent tag someone in the caption
      * @returns `Promise <boolean | MessageId>` This will either return true or the id of the message. It will return true after 10 seconds even if waitForId is true
      */
-    sendFile(to, file, filename, caption, quotedMsgId, waitForId, ptt, withoutPreview, hideTags, viewOnce) {
+    sendFile(to, file, filename, caption, quotedMsgId, waitForId, ptt, withoutPreview, hideTags, viewOnce, requestConfig) {
         return __awaiter(this, void 0, void 0, function* () {
-            return this.sendImage(to, file, filename, caption, quotedMsgId, waitForId, ptt, withoutPreview, hideTags, viewOnce);
+            return this.sendImage(to, file, filename, caption, quotedMsgId, waitForId, ptt, withoutPreview, hideTags, viewOnce, requestConfig);
         });
     }
     /**
@@ -1816,6 +1826,19 @@ class Client {
     sendAudio(to, file, quotedMsgId) {
         return __awaiter(this, void 0, void 0, function* () {
             return this.sendFile(to, file, 'file.mp3', '', quotedMsgId, true, false, false, false);
+        });
+    }
+    /**
+     * Send a poll to a group chat
+     * @param to chat id - a group chat is required
+     * @param name the name of the poll
+     * @param options an array of poll options
+     */
+    sendPoll(to, name, options) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield this.pup(({ to, name, options }) => {
+                return WAPI.sendPoll(to, name, options);
+            }, { to, name, options });
         });
     }
     /**
@@ -1886,8 +1909,7 @@ class Client {
      */
     sendFileFromUrl(to, url, filename, caption, quotedMsgId, requestConfig = {}, waitForId, ptt, withoutPreview, hideTags, viewOnce) {
         return __awaiter(this, void 0, void 0, function* () {
-            const base64 = yield (0, tools_1.getDUrl)(url, requestConfig);
-            return yield this.sendFile(to, base64, filename, caption, quotedMsgId, waitForId, ptt, withoutPreview, hideTags, viewOnce);
+            return yield this.sendFile(to, url, filename, caption, quotedMsgId, waitForId, ptt, withoutPreview, hideTags, viewOnce, requestConfig);
         });
     }
     /**

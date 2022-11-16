@@ -654,7 +654,7 @@ export declare class Client {
      * @param hideTags boolean default: false [INSIDERS] set this to try silent tag someone in the caption
      * @returns `Promise <boolean | string>` This will either return true or the id of the message. It will return true after 10 seconds even if waitForId is true
      */
-    sendImage(to: ChatId, file: AdvancedFile, filename: string, caption: Content, quotedMsgId?: MessageId, waitForId?: boolean, ptt?: boolean, withoutPreview?: boolean, hideTags?: boolean, viewOnce?: boolean): Promise<MessageId | boolean>;
+    sendImage(to: ChatId, file: AdvancedFile, filename: string, caption: Content, quotedMsgId?: MessageId, waitForId?: boolean, ptt?: boolean, withoutPreview?: boolean, hideTags?: boolean, viewOnce?: boolean, requestConfig?: any): Promise<MessageId | boolean>;
     /**
      * Automatically sends a youtube link with the auto generated link preview. You can also add a custom message.
      * @param chatId
@@ -713,7 +713,7 @@ export declare class Client {
      * @param hideTags boolean default: false [INSIDERS] set this to try silent tag someone in the caption
      * @returns `Promise <boolean | MessageId>` This will either return true or the id of the message. It will return true after 10 seconds even if waitForId is true
      */
-    sendFile(to: ChatId, file: AdvancedFile, filename: string, caption: Content, quotedMsgId?: MessageId, waitForId?: boolean, ptt?: boolean, withoutPreview?: boolean, hideTags?: boolean, viewOnce?: boolean): Promise<MessageId | boolean>;
+    sendFile(to: ChatId, file: AdvancedFile, filename: string, caption: Content, quotedMsgId?: MessageId, waitForId?: boolean, ptt?: boolean, withoutPreview?: boolean, hideTags?: boolean, viewOnce?: boolean, requestConfig?: any): Promise<MessageId | boolean>;
     /**
      * {@license:insiders@}
      *
@@ -737,6 +737,13 @@ export declare class Client {
      * @param quotedMsgId string true_0000000000@c.us_JHB2HB23HJ4B234HJB to send as a reply to a message
      */
     sendAudio(to: ChatId, file: AdvancedFile, quotedMsgId?: MessageId): Promise<MessageId>;
+    /**
+     * Send a poll to a group chat
+     * @param to chat id - a group chat is required
+     * @param name the name of the poll
+     * @param options an array of poll options
+     */
+    sendPoll(to: GroupChatId, name: string, options: string[]): Promise<MessageId>;
     /**
      * Sends a video to given chat as a gif, with caption or not, using base64
      * @param to chat id `xxxxx@c.us`

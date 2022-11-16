@@ -42,15 +42,22 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ensureDUrl = exports.generateGHIssueLink = exports.processSendData = exports.timePromise = exports.now = exports.perf = exports.processSend = exports.base64MimeType = exports.getDUrl = exports.isDataURL = exports.isBase64 = exports.camelize = exports.without = exports.getConfigFromProcessEnv = exports.smartUserAgent = exports.timeout = void 0;
+exports.fixPath = exports.pathExists = exports.assertFile = exports.rmFileAsync = exports.FileOutputTypes = exports.FileInputTypes = exports.ensureDUrl = exports.generateGHIssueLink = exports.processSendData = exports.timePromise = exports.now = exports.perf = exports.processSend = exports.base64MimeType = exports.getDUrl = exports.isDataURL = exports.isBase64 = exports.camelize = exports.without = exports.getConfigFromProcessEnv = exports.smartUserAgent = exports.timeout = void 0;
+const crypto_1 = __importDefault(require("crypto"));
 const fs = __importStar(require("fs"));
+const fsp = __importStar(require("fs/promises"));
 const path = __importStar(require("path"));
 const datauri_1 = __importDefault(require("datauri"));
 const is_url_superb_1 = __importDefault(require("is-url-superb"));
 const model_1 = require("../api/model");
 const axios_1 = __importDefault(require("axios"));
 const child_process_1 = require("child_process");
+const os_1 = require("os");
 const perf_hooks_1 = require("perf_hooks");
+const mime_1 = __importDefault(require("mime"));
+const os_2 = require("os");
+const stream_1 = require("stream");
+const logging_1 = require("../logging/logging");
 //@ts-ignore
 process.send = process.send || function () { };
 const timeout = ms => new Promise(resolve => setTimeout(resolve, ms, 'timeout'));
@@ -260,10 +267,14 @@ exports.generateGHIssueLink = generateGHIssueLink;
  * download it and convert it to a DataURL. If Base64, returns it.
  * @param {string} file - The file to be converted to a DataURL.
  * @param {AxiosRequestConfig} requestConfig - AxiosRequestConfig = {}
+ * @param {string} filename - Filename with an extension so a datauri mimetype can be inferred.
  * @returns A DataURL
  */
-const ensureDUrl = (file, requestConfig = {}) => __awaiter(void 0, void 0, void 0, function* () {
-    if (!(0, exports.isDataURL)(file) && !(0, exports.isBase64)(file)) {
+const ensureDUrl = (file, requestConfig = {}, filename) => __awaiter(void 0, void 0, void 0, function* () {
+    if (Buffer.isBuffer(file)) {
+        return `data:${mime_1.default.lookup(filename)};base64,${file.toString('base64').split(',')[1]}`;
+    }
+    else if (!(0, exports.isDataURL)(file) && !(0, exports.isBase64)(file)) {
         //must be a file then
         const relativePath = path.join(path.resolve(process.cwd(), file || ''));
         if (fs.existsSync(file) || fs.existsSync(relativePath)) {
@@ -275,6 +286,144 @@ const ensureDUrl = (file, requestConfig = {}) => __awaiter(void 0, void 0, void 
         else
             throw new model_1.CustomError(model_1.ERROR_NAME.FILE_NOT_FOUND, 'Cannot find file. Make sure the file reference is relative, a valid URL or a valid DataURL');
     }
+    if (file.includes("data:") && file.includes("undefined") || file.includes("application/octet-stream") && filename && mime_1.default.lookup(filename)) {
+        file = `data:${mime_1.default.lookup(filename)};base64,${file.split(',')[1]}`;
+    }
     return file;
 });
 exports.ensureDUrl = ensureDUrl;
+exports.FileInputTypes = {
+    "VALIDATED_FILE_PATH": "VALIDATED_FILE_PATH",
+    "URL": "URL",
+    "DATA_URL": "DATA_URL",
+    "BASE_64": "BASE_64",
+    "BUFFER": "BUFFER",
+    "READ_STREAM": "READ_STREAM",
+};
+exports.FileOutputTypes = Object.assign(Object.assign({}, exports.FileInputTypes), { "TEMP_FILE_PATH": "TEMP_FILE_PATH" });
+/**
+ * Remove file asynchronously
+ * @param file Filepath
+ * @returns
+ */
+function rmFileAsync(file) {
+    return new Promise((resolve, reject) => {
+        fs.unlink(file, (err) => {
+            if (err) {
+                reject(err);
+            }
+            else {
+                resolve(true);
+            }
+        });
+    });
+}
+exports.rmFileAsync = rmFileAsync;
+/**
+ * Takes a file parameter and consistently returns the desired type of file.
+ * @param file The file path, URL, base64 or DataURL string of the file
+ * @param outfileName The ouput filename of the file
+ * @param desiredOutputType The type of file output required from this function
+ * @param requestConfig optional axios config if file parameter is a url
+ */
+const assertFile = (file, outfileName, desiredOutputType, requestConfig) => __awaiter(void 0, void 0, void 0, function* () {
+    let inputType;
+    if (typeof file == 'string') {
+        if ((0, exports.isDataURL)(file))
+            inputType = exports.FileInputTypes.DATA_URL;
+        else if ((0, exports.isBase64)(file))
+            inputType = exports.FileInputTypes.BASE_64;
+        /**
+         * Check if it is a path
+         */
+        else {
+            const relativePath = path.join(path.resolve(process.cwd(), file || ''));
+            if (fs.existsSync(file) || fs.existsSync(relativePath)) {
+                // file = await datauri(fs.existsSync(file)  ? file : relativePath);
+                inputType = exports.FileInputTypes.VALIDATED_FILE_PATH;
+            }
+            else if ((0, is_url_superb_1.default)(file))
+                inputType = exports.FileInputTypes.URL;
+            /**
+             * If not file type is determined by now then it is some sort of unidentifiable string. Throw an error.
+             */
+            if (!inputType)
+                throw new model_1.CustomError(model_1.ERROR_NAME.FILE_NOT_FOUND, `Cannot find file. Make sure the file reference is relative, a valid URL or a valid DataURL: ${file.slice(0, 25)}`);
+        }
+    }
+    else {
+        if (Buffer.isBuffer(file))
+            inputType = exports.FileInputTypes.BUFFER;
+        /**
+         * Leave space to determine if incoming file parameter is any other type of object (maybe one day people will submit a path object as a param?)
+         */
+    }
+    if (inputType === desiredOutputType)
+        return file;
+    switch (desiredOutputType) {
+        case exports.FileOutputTypes.DATA_URL:
+        case exports.FileOutputTypes.BASE_64:
+            return yield (0, exports.ensureDUrl)(file, requestConfig, outfileName);
+            break;
+        case exports.FileOutputTypes.TEMP_FILE_PATH: {
+            /**
+             * Create a temp file in tempdir, return the tempfile.
+             */
+            const tempFilePath = path.join((0, os_2.tmpdir)(), `${crypto_1.default.randomBytes(6).readUIntLE(0, 6).toString(36)}.${outfileName}`);
+            logging_1.log.info(`Saved temporary file to ${tempFilePath}`);
+            if (inputType != exports.FileInputTypes.BUFFER) {
+                file = yield (0, exports.ensureDUrl)(file, requestConfig, outfileName);
+                file = Buffer.from(file.split(',')[1], 'base64');
+            }
+            yield fs.writeFileSync(tempFilePath, file);
+            return tempFilePath;
+            break;
+        }
+        case exports.FileOutputTypes.BUFFER:
+            return Buffer.from((yield (0, exports.ensureDUrl)(file, requestConfig, outfileName)).split(',')[1], 'base64');
+            break;
+        case exports.FileOutputTypes.READ_STREAM: {
+            if (inputType === exports.FileInputTypes.VALIDATED_FILE_PATH)
+                return fs.createReadStream(file);
+            else if (inputType != exports.FileInputTypes.BUFFER)
+                file = Buffer.from((yield (0, exports.ensureDUrl)(file, requestConfig, outfileName)).split(',')[1], 'base64');
+            return stream_1.Readable.from(file);
+            break;
+        }
+    }
+    return file;
+});
+exports.assertFile = assertFile;
+/**
+ * Checks if a given path exists.
+ *
+ * If exists, returns the resolved absolute path. Otherwise returns false.
+ *
+ * @param _path a relative, absolute or homedir path to a folder or a file
+ * @param failSilent If you're expecting for the file to not exist and just want the `false` response then set this to true to prevent false-positive error messages in the logs.
+ * @returns string | false
+ */
+const pathExists = (_path, failSilent) => __awaiter(void 0, void 0, void 0, function* () {
+    _path = (0, exports.fixPath)(_path);
+    try {
+        yield fsp.access(_path, fsp.constants.R_OK | fsp.constants.W_OK);
+        return _path;
+    }
+    catch (error) {
+        if (!failSilent)
+            logging_1.log.error('Given check path threw an error', error);
+        return false;
+    }
+});
+exports.pathExists = pathExists;
+/**
+ * Returns an absolute file path reference
+ * @param _path a relative, absolute or homedir path to a folder or a file
+ * @returns string
+ */
+const fixPath = (_path) => {
+    _path = _path.replace("~", (0, os_1.homedir)());
+    _path = _path.includes('./') ? path.join(process.cwd(), _path) : _path;
+    return _path;
+};
+exports.fixPath = fixPath;
