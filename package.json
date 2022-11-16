@@ -12,7 +12,7 @@
     "wa-automate": "bin/server.js"
   },
   "scripts": {
-    "build": "rm -rf dist/ && tsc && npm run build:lib",
+    "build": "npm run build:lib",
     "build:skipmid": "tsc && npm run build:lib",
     "build:lib": "cp -R ./src/lib dist",
     "docs": "npm run --prefix docs-v3 deploy_with_ssh_ci",
