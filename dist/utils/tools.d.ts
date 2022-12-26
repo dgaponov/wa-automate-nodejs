@@ -1,6 +1,8 @@
 /// <reference types="node" />
+/// <reference types="node" />
+/// <reference types="node" />
 import { AdvancedFile, ConfigObject, DataURL } from '../api/model';
-import { AxiosRequestConfig } from 'axios';
+import { AxiosRequestConfig, AxiosResponseHeaders } from 'axios';
 import { SessionInfo } from '../api/model/sessionInfo';
 import { Readable } from "stream";
 export declare const timeout: (ms: any) => Promise<unknown>;
@@ -31,6 +33,13 @@ export declare const isBase64: (str: string) => boolean;
  * @returns
  */
 export declare const isDataURL: (s: string) => boolean;
+/**
+ * @internal
+ * A convinience method to download the buffer of a downloaded file
+ * @param url The url
+ * @param optionsOverride You can use this to override the [axios request config](https://github.com/axios/axios#request-config)
+ */
+export declare const getBufferFromUrl: (url: string, optionsOverride?: AxiosRequestConfig) => Promise<[Buffer, AxiosResponseHeaders]>;
 /**
  * @internal
  * A convinience method to download the [[DataURL]] of a file

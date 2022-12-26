@@ -37,7 +37,7 @@ const AUTO_DECRYPT = (message, client) => __awaiter(void 0, void 0, void 0, func
 });
 const AUTO_DECRYPT_SAVE = (message, client) => __awaiter(void 0, void 0, void 0, function* () {
     if (message.deprecatedMms3Url && message.mimetype) {
-        const filename = `${message.mId}.${mime_1.default.extension(message.mimetype)}`;
+        const filename = `${message.mId}.${mime_1.default.getExtension(message.mimetype)}`;
         const filePath = `media/${filename}`;
         try {
             const mediaData = yield client.decryptMedia(message);
@@ -59,7 +59,7 @@ const UPLOAD_CLOUD = (message, client) => __awaiter(void 0, void 0, void 0, func
         if (!uploadQueue) {
             uploadQueue = new p_queue_1.default({ concurrency: 2, interval: 1000, carryoverConcurrencyCount: true, intervalCap: 2 });
         }
-        const filename = `${message.mId || `${Date.now()}`}.${mime_1.default.extension(message.mimetype)}`;
+        const filename = `${message.mId || `${Date.now()}`}.${mime_1.default.getExtension(message.mimetype)}`;
         const mediaData = yield client.decryptMedia(message);
         if (!cloudUploadOptions)
             return message;

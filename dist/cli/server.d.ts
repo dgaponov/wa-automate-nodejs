@@ -3,7 +3,7 @@ import http from 'http';
 import { Client } from '..';
 export declare const app: import("express-serve-static-core").Express;
 export declare let server: http.Server;
-export declare type cliFlags = {
+export type cliFlags = {
     [k: string]: number | string | boolean;
 };
 export declare const setupHttpServer: (cliConfig: cliFlags) => void;

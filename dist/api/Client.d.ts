@@ -2,13 +2,13 @@
 import { Page } from 'puppeteer';
 import { Chat, LiveLocationChangedEvent, ChatState, ChatMuteDuration, GroupChatCreationResponse, EphemeralDuration } from './model/chat';
 import { Contact, NumberCheck } from './model/contact';
-import { Message, MessageInfo } from './model/message';
+import { Message, MessageInfo, PollData } from './model/message';
 import { AxiosRequestConfig } from 'axios';
-import { ParticipantChangedEventModel } from './model/group-metadata';
+import { NewCommunityGroup, ParticipantChangedEventModel } from './model/group-metadata';
 import { ConfigObject, STATE, LicenseType, Webhook, EventPayload } from './model';
 import PQueue, { DefaultAddOptions, Options } from 'p-queue';
 import { HealthCheck, SessionInfo } from './model/sessionInfo';
-import { ChatId, GroupChatId, Content, Base64, MessageId, ContactId, DataURL, AdvancedFile } from './model/aliases';
+import { ChatId, GroupChatId, Content, Base64, MessageId, ContactId, DataURL, AdvancedFile, GroupId } from './model/aliases';
 import { CustomProduct, Order, Product } from './model/product';
 import { Label } from './model/label';
 import { Mp4StickerConversionProcessOptions, StickerMetadata } from './model/media';
@@ -40,6 +40,7 @@ export declare class Client {
     private _currentlyBeingKilled;
     private _refreshing;
     private _loaded;
+    private _hostAccountNumber;
     private _prio;
     private _pageListeners;
     private _registeredPageListeners;
@@ -184,6 +185,13 @@ export declare class Client {
      * @fires [[Message]]
      */
     onButton(fn: (message: Message) => void): Promise<Listener | boolean>;
+    /**
+     * Listens to poll vote events
+     * @event
+     * @param fn callback
+     * @fires [[PollData]]
+     */
+    onPollVote(fn: (pollDate: PollData) => void): Promise<Listener | boolean>;
     /**
      * Listens to broadcast messages
      * @event
@@ -1422,6 +1430,18 @@ export declare class Client {
      */
     createGroup(groupName: string, contacts: ContactId | ContactId[]): Promise<GroupChatCreationResponse>;
     /**
+     * {@license:insiders@}
+     *
+     * Create a new community
+     *
+     * @param communityName The community name
+     * @param communitySubject: The community subject line
+     * @param icon DataURL of a 1:1 ratio jpeg for the community icon
+     * @param existingGroups An array of existing group IDs, that are not already part of a community, to add to this new community.
+     * @param newGroups An array of new group objects that
+     */
+    createCommunity(communityName: string, communitySubject: string, icon: DataURL, existingGroups?: GroupChatId[], newGroups?: NewCommunityGroup[]): Promise<GroupId>;
+    /**
      * Remove participant of Group
      *
      * If not a group chat, returns `NOT_A_GROUP_CHAT`.
@@ -1561,6 +1581,12 @@ export declare class Client {
      * @param messageId The message id
      */
     getMessageReaders(messageId: MessageId): Promise<Contact[]>;
+    /**
+     * Returns poll data including results and votes.
+     *
+     * @param messageId The message id of the Poll
+     */
+    getPollData(messageId: MessageId): Promise<PollData>;
     /**
      * Sends a sticker (including GIF) from a given URL
      * @param to: The recipient id.
@@ -1713,7 +1739,7 @@ export declare class Client {
      * @deprecated
      * Alias for deleteStory
      */
-    deleteStatus: (statusesToDelete: string | string[]) => Promise<boolean>;
+    deleteStatus(statusesToDelete: string | string[]): Promise<boolean>;
     /**
      * {@license:restricted@}
      *
@@ -1725,7 +1751,7 @@ export declare class Client {
      * @deprecated
      * Alias for deleteStory
      */
-    deleteAllStatus: () => Promise<boolean>;
+    deleteAllStatus(): Promise<boolean>;
     /**
      * {@license:restricted@}
      *
@@ -1738,7 +1764,7 @@ export declare class Client {
      * @deprecated
      * Alias for deleteStory
      */
-    getMyStatusArray: () => Promise<Message[]>;
+    getMyStatusArray(): Promise<Message[]>;
     /**
      * {@license:restricted@}
      *
@@ -1889,7 +1915,7 @@ export declare class Client {
      *
      * For example, if you have a session with id  `host` if you set useSessionIdInPath to true, then all requests will need to be prefixed with the path `host`. E.g `localhost:8082/sendText` becomes `localhost:8082/host/sendText`
      */
-    middleware: (useSessionIdInPath?: boolean) => (req: Request, res: Response, next: NextFunction) => Promise<any>;
+    middleware: (useSessionIdInPath?: boolean, PORT?: number) => (req: Request, res: Response, next: NextFunction) => Promise<any>;
     /**
      * Retreives an array of webhook objects
      */

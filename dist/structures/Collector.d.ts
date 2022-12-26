@@ -1,4 +1,5 @@
 /// <reference types="node" />
+/// <reference types="node" />
 /**
  * This code is a copy of the Discord Collector: https://github.com/discordjs/discord.js/blob/stable/src/structures/interfaces/Collector.js
  *
@@ -16,7 +17,7 @@ export declare class Collection<K, V> extends BaseCollection<K, V> {
  * @param {Collection} collection The items collected by this collector
  * @returns {boolean|Promise<boolean>}
  */
-export declare type CollectorFilter<T extends any[]> = (...args: T) => boolean | Promise<boolean>;
+export type CollectorFilter<T extends any[]> = (...args: T) => boolean | Promise<boolean>;
 /**
  * Options to be applied to the collector.
  */

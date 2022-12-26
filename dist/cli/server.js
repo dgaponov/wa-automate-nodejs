@@ -1,7 +1,11 @@
 "use strict";
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
 }) : (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
     o[k2] = m[k];
@@ -239,7 +243,7 @@ const setupMetaMiddleware = () => {
         }
     }));
 };
-const getCommands = () => Object.entries(collections_1.collections['swagger'].paths).reduce((acc, [key, value]) => { var _a, _b, _c, _d, _e; acc[key.replace("/", "")] = ((_e = (_d = (_c = (_b = (_a = value) === null || _a === void 0 ? void 0 : _a.post) === null || _b === void 0 ? void 0 : _b.requestBody) === null || _c === void 0 ? void 0 : _c.content["application/json"]) === null || _d === void 0 ? void 0 : _d.example) === null || _e === void 0 ? void 0 : _e.args) || {}; return acc; }, {});
+const getCommands = () => Object.entries(collections_1.collections['swagger'].paths).reduce((acc, [key, value]) => { var _a, _b, _c, _d; acc[key.replace("/", "")] = ((_d = (_c = (_b = (_a = value === null || value === void 0 ? void 0 : value.post) === null || _a === void 0 ? void 0 : _a.requestBody) === null || _b === void 0 ? void 0 : _b.content["application/json"]) === null || _c === void 0 ? void 0 : _c.example) === null || _d === void 0 ? void 0 : _d.args) || {}; return acc; }, {});
 exports.getCommands = getCommands;
 const listListeners = () => {
     return Object.keys(__1.SimpleListener).map(eventKey => __1.SimpleListener[eventKey]);

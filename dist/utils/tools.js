@@ -1,7 +1,11 @@
 "use strict";
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
 }) : (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
     o[k2] = m[k];
@@ -42,7 +46,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.fixPath = exports.pathExists = exports.assertFile = exports.rmFileAsync = exports.FileOutputTypes = exports.FileInputTypes = exports.ensureDUrl = exports.generateGHIssueLink = exports.processSendData = exports.timePromise = exports.now = exports.perf = exports.processSend = exports.base64MimeType = exports.getDUrl = exports.isDataURL = exports.isBase64 = exports.camelize = exports.without = exports.getConfigFromProcessEnv = exports.smartUserAgent = exports.timeout = void 0;
+exports.fixPath = exports.pathExists = exports.assertFile = exports.rmFileAsync = exports.FileOutputTypes = exports.FileInputTypes = exports.ensureDUrl = exports.generateGHIssueLink = exports.processSendData = exports.timePromise = exports.now = exports.perf = exports.processSend = exports.base64MimeType = exports.getDUrl = exports.getBufferFromUrl = exports.isDataURL = exports.isBase64 = exports.camelize = exports.without = exports.getConfigFromProcessEnv = exports.smartUserAgent = exports.timeout = void 0;
 const crypto_1 = __importDefault(require("crypto"));
 const fs = __importStar(require("fs"));
 const fsp = __importStar(require("fs/promises"));
@@ -58,6 +62,24 @@ const mime_1 = __importDefault(require("mime"));
 const os_2 = require("os");
 const stream_1 = require("stream");
 const logging_1 = require("../logging/logging");
+const import_1 = require("@brillout/import");
+const fsconstants = fsp.constants || {
+    F_OK: 0,
+    R_OK: 4,
+    W_OK: 2,
+    X_OK: 1
+};
+const IGNORE_FILE_EXTS = [
+    'mpga'
+];
+let _ft = null;
+const ft = () => __awaiter(void 0, void 0, void 0, function* () {
+    if (!_ft) {
+        const x = yield (0, import_1.import_)('file-type');
+        _ft = x;
+    }
+    return _ft;
+});
 //@ts-ignore
 process.send = process.send || function () { };
 const timeout = ms => new Promise(resolve => setTimeout(resolve, ms, 'timeout'));
@@ -141,6 +163,26 @@ const isDataURL = (s) => !!s.match(/^data:((?:\w+\/(?:(?!;).)+)?)((?:;[\w\W]*?[^
 exports.isDataURL = isDataURL;
 /**
  * @internal
+ * A convinience method to download the buffer of a downloaded file
+ * @param url The url
+ * @param optionsOverride You can use this to override the [axios request config](https://github.com/axios/axios#request-config)
+ */
+const getBufferFromUrl = (url, optionsOverride = {}) => __awaiter(void 0, void 0, void 0, function* () {
+    // eslint-disable-next-line no-useless-catch
+    try {
+        const res = yield (0, axios_1.default)(Object.assign(Object.assign({ method: 'get', url, headers: {
+                DNT: 1,
+                'Upgrade-Insecure-Requests': 1,
+            } }, optionsOverride), { responseType: 'arraybuffer' }));
+        return [Buffer.from(res.data, 'binary'), res.headers];
+    }
+    catch (error) {
+        throw error;
+    }
+});
+exports.getBufferFromUrl = getBufferFromUrl;
+/**
+ * @internal
  * A convinience method to download the [[DataURL]] of a file
  * @param url The url
  * @param optionsOverride You can use this to override the [axios request config](https://github.com/axios/axios#request-config)
@@ -148,11 +190,8 @@ exports.isDataURL = isDataURL;
 const getDUrl = (url, optionsOverride = {}) => __awaiter(void 0, void 0, void 0, function* () {
     // eslint-disable-next-line no-useless-catch
     try {
-        const res = yield (0, axios_1.default)(Object.assign(Object.assign({ method: 'get', url, headers: {
-                DNT: 1,
-                'Upgrade-Insecure-Requests': 1,
-            } }, optionsOverride), { responseType: 'arraybuffer' }));
-        const dUrl = `data:${res.headers['content-type']};base64,${Buffer.from(res.data, 'binary').toString('base64')}`;
+        const [buff, headers] = yield (0, exports.getBufferFromUrl)(url, optionsOverride);
+        const dUrl = `data:${headers['content-type']};base64,${buff.toString('base64')}`;
         return dUrl;
     }
     catch (error) {
@@ -272,7 +311,11 @@ exports.generateGHIssueLink = generateGHIssueLink;
  */
 const ensureDUrl = (file, requestConfig = {}, filename) => __awaiter(void 0, void 0, void 0, function* () {
     if (Buffer.isBuffer(file)) {
-        return `data:${mime_1.default.lookup(filename)};base64,${file.toString('base64').split(',')[1]}`;
+        if (!filename) {
+            const { ext } = yield (yield ft()).fileTypeFromBuffer(file);
+            filename = `file.${ext}`;
+        }
+        return `data:${mime_1.default.getType(filename)};base64,${file.toString('base64').split(',')[1]}`;
     }
     else if (!(0, exports.isDataURL)(file) && !(0, exports.isBase64)(file)) {
         //must be a file then
@@ -286,8 +329,12 @@ const ensureDUrl = (file, requestConfig = {}, filename) => __awaiter(void 0, voi
         else
             throw new model_1.CustomError(model_1.ERROR_NAME.FILE_NOT_FOUND, 'Cannot find file. Make sure the file reference is relative, a valid URL or a valid DataURL');
     }
-    if (file.includes("data:") && file.includes("undefined") || file.includes("application/octet-stream") && filename && mime_1.default.lookup(filename)) {
-        file = `data:${mime_1.default.lookup(filename)};base64,${file.split(',')[1]}`;
+    if (!filename) {
+        const { ext } = yield (yield ft()).fileTypeFromBuffer(Buffer.from(file.split(',')[1], 'base64'));
+        filename = `file.${ext}`;
+    }
+    if (file.includes("data:") && file.includes("undefined") || file.includes("application/octet-stream") && filename && mime_1.default.getType(filename)) {
+        file = `data:${mime_1.default.getType(filename)};base64,${file.split(',')[1]}`;
     }
     return file;
 });
@@ -369,13 +416,17 @@ const assertFile = (file, outfileName, desiredOutputType, requestConfig) => __aw
             /**
              * Create a temp file in tempdir, return the tempfile.
              */
-            const tempFilePath = path.join((0, os_2.tmpdir)(), `${crypto_1.default.randomBytes(6).readUIntLE(0, 6).toString(36)}.${outfileName}`);
-            logging_1.log.info(`Saved temporary file to ${tempFilePath}`);
+            let tfn = `${crypto_1.default.randomBytes(6).readUIntLE(0, 6).toString(36)}.${outfileName}`;
             if (inputType != exports.FileInputTypes.BUFFER) {
                 file = yield (0, exports.ensureDUrl)(file, requestConfig, outfileName);
+                const ext = mime_1.default.getExtension(file.match(/[^:]\w+\/[\w-+\d.]+(?=;|,)/)[0]);
+                if (ext && !IGNORE_FILE_EXTS.includes(ext) && !tfn.endsWith(ext))
+                    tfn = `${tfn}.${ext}`;
                 file = Buffer.from(file.split(',')[1], 'base64');
             }
+            const tempFilePath = path.join((0, os_2.tmpdir)(), tfn);
             yield fs.writeFileSync(tempFilePath, file);
+            logging_1.log.info(`Saved temporary file to ${tempFilePath}`);
             return tempFilePath;
             break;
         }
@@ -406,7 +457,7 @@ exports.assertFile = assertFile;
 const pathExists = (_path, failSilent) => __awaiter(void 0, void 0, void 0, function* () {
     _path = (0, exports.fixPath)(_path);
     try {
-        yield fsp.access(_path, fsp.constants.R_OK | fsp.constants.W_OK);
+        yield fsp.access(_path, fsconstants.R_OK | fsconstants.W_OK);
         return _path;
     }
     catch (error) {

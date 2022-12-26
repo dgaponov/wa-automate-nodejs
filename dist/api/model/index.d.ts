@@ -100,7 +100,7 @@ export declare enum STATE {
      */
     DISCONNECTED = "DISCONNECTED"
 }
-export declare type EasyApiResponse = {
+export type EasyApiResponse = {
     success: boolean;
     response: any;
 };

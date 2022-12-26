@@ -74,6 +74,10 @@ var SimpleListener;
      */
     SimpleListener["Button"] = "onButton";
     /**
+     * Represents [[onButton]]
+     */
+    SimpleListener["PollVote"] = "onPollVote";
+    /**
      * Represents [[onBroadcast]]
      */
     SimpleListener["Broadcast"] = "onBroadcast";

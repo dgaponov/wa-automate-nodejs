@@ -1,7 +1,11 @@
 "use strict";
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
 }) : (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
     o[k2] = m[k];
@@ -109,21 +113,6 @@ class Client {
          */
         this._registeredWebhookListeners = {};
         /**
-         * @deprecated
-         * Alias for deleteStory
-         */
-        this.deleteStatus = this.deleteStory;
-        /**
-         * @deprecated
-         * Alias for deleteStory
-         */
-        this.deleteAllStatus = this.deleteAllStories;
-        /**
-         * @deprecated
-         * Alias for deleteStory
-         */
-        this.getMyStatusArray = this.getMyStoryArray;
-        /**
          * This exposes a simple express middlware that will allow users to quickly boot up an api based off this client. Checkout demo/index.ts for an example
          * How to use the middleware:
          *
@@ -201,10 +190,42 @@ class Client {
          *
          * For example, if you have a session with id  `host` if you set useSessionIdInPath to true, then all requests will need to be prefixed with the path `host`. E.g `localhost:8082/sendText` becomes `localhost:8082/host/sendText`
          */
-        this.middleware = (useSessionIdInPath = false) => (req, res, next) => __awaiter(this, void 0, void 0, function* () {
+        this.middleware = (useSessionIdInPath = false, PORT) => (req, res, next) => __awaiter(this, void 0, void 0, function* () {
             if (useSessionIdInPath && !req.path.includes(this._createConfig.sessionId) && this._createConfig.sessionId !== 'session')
                 return next();
             const methodFromPath = this._createConfig.sessionId && this._createConfig.sessionId !== 'session' && req.path.includes(this._createConfig.sessionId) ? req.path.replace(`/${this._createConfig.sessionId}/`, '') : req.path.replace('/', '');
+            if (req.get('owa-check-property') && req.get('owa-check-value')) {
+                const checkProp = req.get('owa-check-property');
+                const checkValue = req.get('owa-check-value');
+                const sessionId = this._createConfig.sessionId;
+                const hostAccountNumber = yield this.getHostNumber();
+                let checkPassed = false;
+                switch (checkProp) {
+                    case 'session':
+                        checkPassed = sessionId === checkValue;
+                        break;
+                    case 'number':
+                        checkPassed = hostAccountNumber.includes(checkValue);
+                        break;
+                }
+                if (!checkPassed) {
+                    if (PORT)
+                        (0, tools_1.processSendData)({ port: PORT });
+                    return res.status(412).send({
+                        success: false,
+                        error: {
+                            name: 'CHECK_FAILED',
+                            message: `Check FAILED - Are you sure you meant to send the request to this session?`,
+                            data: {
+                                incomingCheckProperty: checkProp,
+                                incomingCheckValue: checkValue,
+                                sessionId,
+                                hostAccountNumber: `${hostAccountNumber.substr(-4)}`
+                            }
+                        }
+                    });
+                }
+            }
             if (req.method === 'POST') {
                 const rb = (req === null || req === void 0 ? void 0 : req.body) || {};
                 let { args } = rb;
@@ -233,7 +254,7 @@ class Client {
                     }
                     catch (error) {
                         console.error("middleware -> error", error);
-                        if (methodRequiresArgs && args == [])
+                        if (methodRequiresArgs && Array.isArray(args))
                             error.message = `${(req === null || req === void 0 ? void 0 : req.params) ? "Please set arguments in request json body, not in params." : "Args expected, none found."} ${error.message}`;
                         return res.send({
                             success: false,
@@ -821,6 +842,17 @@ class Client {
         });
     }
     /**
+     * Listens to poll vote events
+     * @event
+     * @param fn callback
+     * @fires [[PollData]]
+     */
+    onPollVote(fn) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return this.registerListener(events_2.SimpleListener.PollVote, fn);
+        });
+    }
+    /**
      * Listens to broadcast messages
      * @event
      * @param fn callback
@@ -1262,8 +1294,8 @@ class Client {
             if (this._currentlyBeingKilled)
                 return;
             this._currentlyBeingKilled = true;
-            console.log('Killing client. Shutting Down');
-            logging_1.log.info('Killing client. Shutting Down');
+            console.log(`Killing client. Shutting Down: ${reason}`);
+            logging_1.log.info(`Killing client. Shutting Down: ${reason}`);
             const browser = yield ((_a = this === null || this === void 0 ? void 0 : this._page) === null || _a === void 0 ? void 0 : _a.browser());
             const pid = (browser === null || browser === void 0 ? void 0 : browser.process()) ? (_b = browser === null || browser === void 0 ? void 0 : browser.process()) === null || _b === void 0 ? void 0 : _b.pid : null;
             try {
@@ -1676,6 +1708,7 @@ class Client {
                 }))(),
                 (0, tools_1.assertFile)(file, filename, tools_1.FileOutputTypes.TEMP_FILE_PATH, requestConfig || {})
             ]);
+            //@ts-ignore
             yield inputElement.uploadFile(fileAsLocalTemp);
             file = inputElementId;
             /**
@@ -2228,7 +2261,9 @@ class Client {
      */
     getHostNumber() {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield this.pup(() => WAPI.getHostNumber());
+            if (!this._hostAccountNumber)
+                this._hostAccountNumber = (yield this.pup(() => WAPI.getHostNumber()));
+            return this._hostAccountNumber;
         });
     }
     /**
@@ -2246,7 +2281,8 @@ class Client {
      */
     getTunnelCode() {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield this.pup(() => WAPI.getTunnelCode());
+            const sessionId = this.getSessionId();
+            return yield this.pup(sessionId => WAPI.getTunnelCode(sessionId), sessionId);
         });
     }
     /**
@@ -2956,6 +2992,22 @@ class Client {
         });
     }
     /**
+     * {@license:insiders@}
+     *
+     * Create a new community
+     *
+     * @param communityName The community name
+     * @param communitySubject: The community subject line
+     * @param icon DataURL of a 1:1 ratio jpeg for the community icon
+     * @param existingGroups An array of existing group IDs, that are not already part of a community, to add to this new community.
+     * @param newGroups An array of new group objects that
+     */
+    createCommunity(communityName, communitySubject, icon, existingGroups = [], newGroups) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield this.pup(({ communityName, communitySubject, icon, existingGroups, newGroups }) => WAPI.createCommunity(communityName, communitySubject, icon, existingGroups, newGroups), { communityName, communitySubject, icon, existingGroups, newGroups });
+        });
+    }
+    /**
      * Remove participant of Group
      *
      * If not a group chat, returns `NOT_A_GROUP_CHAT`.
@@ -3174,6 +3226,16 @@ class Client {
     getMessageReaders(messageId) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield this.pup((messageId) => WAPI.getMessageReaders(messageId), messageId);
+        });
+    }
+    /**
+     * Returns poll data including results and votes.
+     *
+     * @param messageId The message id of the Poll
+     */
+    getPollData(messageId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield this.pup((messageId) => WAPI.getPollData(messageId), messageId);
         });
     }
     /**
@@ -3565,6 +3627,15 @@ class Client {
         });
     }
     /**
+     * @deprecated
+     * Alias for deleteStory
+     */
+    deleteStatus(statusesToDelete) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield this.deleteStory(statusesToDelete);
+        });
+    }
+    /**
      * {@license:restricted@}
      *
      * Deletes all your existing stories.
@@ -3573,6 +3644,15 @@ class Client {
     deleteAllStories() {
         return __awaiter(this, void 0, void 0, function* () {
             return yield this.pup(() => WAPI.deleteAllStatus());
+        });
+    }
+    /**
+     * @deprecated
+     * Alias for deleteStory
+     */
+    deleteAllStatus() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield this.deleteAllStories();
         });
     }
     /**
@@ -3585,6 +3665,15 @@ class Client {
     getMyStoryArray() {
         return __awaiter(this, void 0, void 0, function* () {
             return yield this.pup(() => WAPI.getMyStatusArray());
+        });
+    }
+    /**
+     * @deprecated
+     * Alias for deleteStory
+     */
+    getMyStatusArray() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield this.getMyStoryArray();
         });
     }
     /**
@@ -3881,8 +3970,8 @@ class Client {
      * @param options The options for the collector. For example, how long the collector shall run for, how many messages it should collect, how long between messages before timing out, etc.
      */
     createMessageCollector(c, filter, options) {
-        var _a, _b, _c;
-        const chatId = (((_b = (_a = c) === null || _a === void 0 ? void 0 : _a.chat) === null || _b === void 0 ? void 0 : _b.id) || ((_c = c) === null || _c === void 0 ? void 0 : _c.id) || c);
+        var _a;
+        const chatId = (((_a = c === null || c === void 0 ? void 0 : c.chat) === null || _a === void 0 ? void 0 : _a.id) || (c === null || c === void 0 ? void 0 : c.id) || c);
         return new MessageCollector_1.MessageCollector(this.getSessionId(), this.getInstanceId(), chatId, filter, options, events_1.ev);
     }
     /**

@@ -42,6 +42,8 @@ function start() {
         const { cliConfig, createConfig, PORT, spinner } = yield (0, setup_1.cli)();
         process.env.OWA_CLI = "true";
         spinner.start("Launching EASY API");
+        if (cliConfig.verbose)
+            index_1.log.info(`config: `, { cliConfig, createConfig, PORT });
         (0, server_1.setUpExpressApp)();
         if (cliConfig.cors)
             yield (0, server_1.enableCORSRequests)(cliConfig);
@@ -171,7 +173,7 @@ function start() {
                 if (createConfig.messagePreprocessor === "AUTO_DECRYPT_SAVE") {
                     (0, server_1.setupMediaMiddleware)();
                 }
-                server_1.app.use(client.middleware((cliConfig && cliConfig.useSessionIdInPath)));
+                server_1.app.use(client.middleware((cliConfig && cliConfig.useSessionIdInPath), PORT));
                 if (cliConfig.socket) {
                     spinner.info("Setting up socket");
                     yield (0, server_1.setupSocketServer)(cliConfig, client);
@@ -201,7 +203,7 @@ function start() {
                     spinner.info(`\n• Setting up external tunnel`);
                     const tunnel = yield (0, localtunnel_1.default)({
                         port: PORT,
-                        host: "https://public.openwa.cloud",
+                        host: process.env.WA_TUNNEL_SERVER || "https://public.openwa.cloud",
                         subdomain: yield client.getTunnelCode()
                     });
                     cliConfig.apiHost = cliConfig.tunnel = tunnel.url;

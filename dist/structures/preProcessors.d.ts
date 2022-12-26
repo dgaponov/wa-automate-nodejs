@@ -1,6 +1,6 @@
 import { Client } from "../api/Client";
 import { Message } from "../api/model/message";
-export declare type MessagePreProcessor = (message: Message, client?: Client) => Promise<Message>;
+export type MessagePreProcessor = (message: Message, client?: Client) => Promise<Message>;
 /**
  * An object that contains all available [[PREPROCESSORS]].
  *
@@ -47,4 +47,4 @@ export declare enum PREPROCESSORS {
 /**
  * The actual type for [config.messagePreprocessor](/docs/api/interfaces/api_model_config.ConfigObject#messagepreprocessor)
  */
-export declare type MPConfigType = PREPROCESSORS | MessagePreProcessor | (PREPROCESSORS | MessagePreProcessor)[];
+export type MPConfigType = PREPROCESSORS | MessagePreProcessor | (PREPROCESSORS | MessagePreProcessor)[];

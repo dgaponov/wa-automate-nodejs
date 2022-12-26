@@ -29,7 +29,7 @@ export declare const addRotateFileLogTransport: (options?: any) => void;
  * @private
  */
 export declare const addSysLogTransport: (options?: any) => void;
-export declare type ConfigLogTransport = {
+export type ConfigLogTransport = {
     /**
      * The type of winston transport. At the moment only `file`, `console`, `ev` and `syslog` are supported.
      */

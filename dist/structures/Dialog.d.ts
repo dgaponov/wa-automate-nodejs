@@ -20,7 +20,7 @@ export interface DialogTemplate {
         [key: string]: DialogProperty;
     };
 }
-export declare type CheckFunction = (lastReceivedMessage: Message, currentProps: CurrentDialogProps) => boolean;
+export type CheckFunction = (lastReceivedMessage: Message, currentProps: CurrentDialogProps) => boolean;
 export interface DialogProperty {
     "order": number;
     "key": string;

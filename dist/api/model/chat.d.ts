@@ -105,7 +105,7 @@ export interface GroupChat extends BaseChat {
      */
     isGroup: true;
 }
-export declare type Chat = SingleChat | GroupChat;
+export type Chat = SingleChat | GroupChat;
 export interface LiveLocationChangedEvent {
     id: string;
     lat: number;
@@ -210,4 +210,4 @@ export interface GroupChatCreationResponse {
 /**
  * Ephemeral duration can be 1 day, 7 days or 90 days. The default is 1 day.
  */
-export declare type EphemeralDuration = 86400 | 604800 | 7776000;
+export type EphemeralDuration = 86400 | 604800 | 7776000;

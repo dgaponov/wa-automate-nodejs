@@ -1,7 +1,11 @@
 "use strict";
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
 }) : (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
     o[k2] = m[k];
@@ -37,6 +41,7 @@ const fs = __importStar(require("fs/promises"));
 const death_1 = __importDefault(require("death"));
 // import puppeteer from 'puppeteer-extra';
 const puppeteer_config_1 = require("../config/puppeteer.config");
+const puppeteer_1 = require("puppeteer");
 const events_1 = require("./events");
 const pico_s3_1 = require("pico-s3");
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -47,7 +52,7 @@ const tools_1 = require("../utils/tools");
 const script_preloader_1 = require("./script_preloader");
 const patch_manager_1 = require("./patch_manager");
 const init_patch_1 = require("./init_patch");
-let browser, wapiInjected = false, dumbCache = undefined, wapiAttempts = 1;
+let browser, wapiInjected = false, pageCache = undefined, wapiAttempts = 1;
 exports.BROWSER_START_TS = 0;
 function initPage(sessionId, config, qrManager, customUserAgent, spinner, _page, skipAuth) {
     var _a, _b, _c, _d, _e;
@@ -128,32 +133,50 @@ function initPage(sessionId, config, qrManager, customUserAgent, spinner, _page,
         if (proxyAddr) {
             proxy = (yield Promise.resolve().then(() => __importStar(require('smashah-puppeteer-page-proxy')))).default;
         }
+        /**
+         * Detect a locally cached page
+         */
+        if (process.env.WA_LOCAL_PAGE_CACHE) {
+            const localPageCacheExists = yield (0, tools_1.pathExists)(process.env.WA_LOCAL_PAGE_CACHE, true);
+            logging_1.log.info(`Local page cache env var set: ${process.env.WA_LOCAL_PAGE_CACHE} ${localPageCacheExists}`);
+            if (localPageCacheExists) {
+                logging_1.log.info(`Local page cache file exists. Loading...`);
+                pageCache = yield fs.readFile(process.env.WA_LOCAL_PAGE_CACHE, "utf8");
+            }
+        }
         if (interceptAuthentication || proxyAddr || blockCrashLogs || true) {
             yield waPage.setRequestInterception(true);
             waPage.on('response', (response) => __awaiter(this, void 0, void 0, function* () {
                 try {
                     if (response.request().url() == "https://web.whatsapp.com/") {
                         const t = yield response.text();
-                        if (t.includes(`class="no-js"`) && t.includes(`self.`) && !dumbCache) {
+                        if (t.includes(`class="no-js"`) && t.includes(`self.`) && !pageCache) {
                             //this is a valid response, save it for later
-                            dumbCache = t;
+                            pageCache = t;
                             logging_1.log.info("saving valid page to dumb cache");
+                            /**
+                             * Save locally
+                             */
+                            if (process.env.WA_LOCAL_PAGE_CACHE) {
+                                logging_1.log.info(`Writing page cache to local file: ${process.env.WA_LOCAL_PAGE_CACHE}`);
+                                yield fs.writeFile(process.env.WA_LOCAL_PAGE_CACHE, pageCache);
+                            }
                         }
                     }
                 }
                 catch (error) {
-                    logging_1.log.error("dumb cache error", error);
+                    logging_1.log.error("page cache error", error);
                 }
             }));
             const authCompleteEv = new events_1.EvEmitter(sessionId, 'AUTH');
             waPage.on('request', (request) => __awaiter(this, void 0, void 0, function* () {
                 //local refresh cache:
-                if (request.url() === "https://web.whatsapp.com/" && dumbCache) {
-                    //if the dumbCache isn't set and this response includes
-                    logging_1.log.info("reviving page from dumb cache");
+                if (request.url() === "https://web.whatsapp.com/" && pageCache) {
+                    //if the pageCache isn't set and this response includes
+                    logging_1.log.info("reviving page from page cache");
                     return yield request.respond({
                         status: 200,
-                        body: dumbCache
+                        body: pageCache
                     });
                 }
                 if (interceptAuthentication &&
@@ -435,6 +458,11 @@ function initBrowser(sessionId, config = {}, spinner) {
                 browserDownloadSpinner.succeed('Something went wrong while downloading the browser');
             }
         }
+        /**
+         * Explicit fallback due to pptr 19
+         */
+        if (!config.executablePath)
+            config.executablePath = (0, puppeteer_1.executablePath)();
         if (((_a = config === null || config === void 0 ? void 0 : config.proxyServerCredentials) === null || _a === void 0 ? void 0 : _a.address) && (config === null || config === void 0 ? void 0 : config.useNativeProxy))
             puppeteer_config_1.puppeteerConfig.chromiumArgs.push(`--proxy-server=${config.proxyServerCredentials.address}`);
         if (config === null || config === void 0 ? void 0 : config.browserWsEndpoint)
@@ -442,7 +470,7 @@ function initBrowser(sessionId, config = {}, spinner) {
         let args = [...puppeteer_config_1.puppeteerConfig.chromiumArgs, ...((config === null || config === void 0 ? void 0 : config.chromiumArgs) || [])];
         if (config === null || config === void 0 ? void 0 : config.multiDevice) {
             args = args.filter(x => x != '--incognito');
-            config["userDataDir"] = config["userDataDir"] || `${(config === null || config === void 0 ? void 0 : config.inDocker) ? '/sessions' : (config === null || config === void 0 ? void 0 : config.sessionDataPath) || '.'}/_IGNORE_${(config === null || config === void 0 ? void 0 : config.sessionId) || 'session'}`;
+            config["userDataDir"] = config["userDataDir"] || `${(config === null || config === void 0 ? void 0 : config.sessionDataPath) || ((config === null || config === void 0 ? void 0 : config.inDocker) ? '/sessions' : (config === null || config === void 0 ? void 0 : config.sessionDataPath) || '.')}/_IGNORE_${(config === null || config === void 0 ? void 0 : config.sessionId) || 'session'}`;
             args.push(`--user-data-dir=${config["userDataDir"]}`);
             spinner === null || spinner === void 0 ? void 0 : spinner.info('MD Enabled, turning off incognito mode.');
             spinner === null || spinner === void 0 ? void 0 : spinner.info(`Data dir: ${config["userDataDir"]}`);

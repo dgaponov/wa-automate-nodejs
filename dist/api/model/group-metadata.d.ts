@@ -1,4 +1,4 @@
-import { ChatId, ContactId, GroupChatId, NonSerializedId } from './aliases';
+import { ChatId, ContactId, GroupChatId, NonSerializedId, DataURL, GroupId } from './aliases';
 export interface Participant {
     id: NonSerializedId;
     isAdmin: boolean;
@@ -45,6 +45,26 @@ export interface GroupMetadata {
      * Not sure what this represents
      */
     support?: boolean;
+    /**
+     * Is this group a parent group (a.k.a community)
+     */
+    isParentGroup?: boolean;
+    /**
+     * The type of group
+     */
+    groupType: 'DEAFULT' | 'SUBGROUP' | 'COMMUNITY';
+    /**
+     * Communities have a default group chat
+     */
+    defaultSubgroup: boolean;
+    /**
+     *
+     */
+    isParentGroupClosed: boolean;
+    /**
+     * List of Group IDs that the host account has joined as part of this community
+     */
+    joinedSubgroups: GroupId[];
 }
 export declare enum groupChangeEvent {
     remove = "remove",
@@ -71,4 +91,12 @@ export declare enum GroupNotificationTypes {
     PICTURE = "picture",
     ANNOUNCE = "announce",
     RESTRICT = "restrict"
+}
+/**
+ * Used when creating a new community with.
+ */
+export interface NewCommunityGroup {
+    subject: string;
+    icon?: DataURL;
+    ephemeralDuration?: number;
 }

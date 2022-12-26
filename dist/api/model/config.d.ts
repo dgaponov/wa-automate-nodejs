@@ -36,16 +36,16 @@ export declare enum DIRECTORY_STRATEGY {
      */
     DATE_CHAT = "DATE_CHAT"
 }
-declare type SessionId = string;
-declare type LicenseKey = string;
-declare type HostAccountNumber = `${number}`;
-declare type HostAccountNumberOrSessionID = HostAccountNumber | SessionId;
-declare type LicenseKeyConfigObject = {
+type SessionId = string;
+type LicenseKey = string;
+type HostAccountNumber = `${number}`;
+type HostAccountNumberOrSessionID = HostAccountNumber | SessionId;
+type LicenseKeyConfigObject = {
     [key: HostAccountNumberOrSessionID]: LicenseKey;
 };
-declare type LicenseKeyConfigFunctionReturn = LicenseKeyConfigObject | LicenseKey;
-declare type LicenseKeyConfigFunction = (sessionId?: SessionId, number?: HostAccountNumber) => LicenseKeyConfigFunctionReturn | Promise<LicenseKeyConfigFunctionReturn>;
-declare type LicenseKeyConfig = LicenseKeyConfigFunction | LicenseKeyConfigObject | LicenseKey;
+type LicenseKeyConfigFunctionReturn = LicenseKeyConfigObject | LicenseKey;
+type LicenseKeyConfigFunction = (sessionId?: SessionId, number?: HostAccountNumber) => LicenseKeyConfigFunctionReturn | Promise<LicenseKeyConfigFunctionReturn>;
+type LicenseKeyConfig = LicenseKeyConfigFunction | LicenseKeyConfigObject | LicenseKey;
 /**
  * The available languages for the host security notification
  */
@@ -799,7 +799,7 @@ export interface ConfigObject {
     /**@internal */
     [x: string]: any;
 }
-export declare type AdvancedConfig = ConfigObject & {
+export type AdvancedConfig = ConfigObject & {
     licenseKey: LicenseKeyConfig;
 };
 export {};

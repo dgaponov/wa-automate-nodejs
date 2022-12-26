@@ -1,4 +1,4 @@
-export declare type StickerMetadata = {
+export type StickerMetadata = {
     /**
      * The author of the sticker
      * @default ``
@@ -53,7 +53,7 @@ export declare type StickerMetadata = {
      */
     cornerRadius?: number;
 };
-export declare type Mp4StickerConversionProcessOptions = {
+export type Mp4StickerConversionProcessOptions = {
     /**
      * Desired Frames per second of the sticker output
      * @default `10`

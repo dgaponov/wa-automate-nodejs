@@ -3,7 +3,7 @@ import { Message, MessageAck } from "./message";
 /**
  * A reaction is identified the specific emoji.
  */
-export declare type Reaction = {
+export type Reaction = {
     /**
      * The aggregate emoji used for the reaction.
      */
@@ -24,7 +24,7 @@ export declare type Reaction = {
 /**
  * The specific reaction by a user
  */
-export declare type ReactionRecord = {
+export type ReactionRecord = {
     /**
      * The acknowledgement of the reaction
      */
@@ -56,7 +56,7 @@ export declare type ReactionRecord = {
 /**
  * Emitted by onReaction
  */
-export declare type ReactionEvent = {
+export type ReactionEvent = {
     /**
      * The message being reacted to
      */

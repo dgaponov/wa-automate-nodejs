@@ -1,26 +1,30 @@
-declare type Brand<K, T> = K & {
+type Brand<K, T> = K & {
     __brand?: T;
 };
 /**
  * The suffix used to identify a non-group chat id
  */
-export declare type ChatServer = 'c.us';
+export type ChatServer = 'c.us';
 /**
  * The suffix used to identify a group chat id
  */
-export declare type GroupChatServer = 'g.us';
+export type GroupChatServer = 'g.us';
 /**
  * A type alias for all available "servers"
  */
-export declare type WaServers = ChatServer | GroupChatServer;
+export type WaServers = ChatServer | GroupChatServer;
 /**
  * Type alias representing all available country codes
  */
-export declare type CountryCode = 1 | 7 | 20 | 27 | 30 | 31 | 32 | 33 | 34 | 36 | 39 | 40 | 41 | 43 | 44 | 45 | 46 | 47 | 48 | 49 | 51 | 52 | 53 | 54 | 55 | 56 | 57 | 58 | 60 | 61 | 62 | 63 | 64 | 65 | 66 | 81 | 82 | 84 | 86 | 90 | 91 | 92 | 93 | 94 | 95 | 98 | 211 | 212 | 213 | 216 | 218 | 220 | 221 | 222 | 223 | 224 | 225 | 226 | 227 | 228 | 229 | 230 | 231 | 232 | 233 | 234 | 235 | 236 | 237 | 238 | 239 | 240 | 241 | 242 | 243 | 244 | 245 | 246 | 248 | 249 | 250 | 251 | 252 | 253 | 254 | 255 | 256 | 257 | 258 | 260 | 261 | 262 | 263 | 264 | 265 | 266 | 267 | 268 | 269 | 290 | 291 | 297 | 298 | 299 | 350 | 351 | 352 | 353 | 354 | 355 | 356 | 357 | 358 | 359 | 370 | 371 | 372 | 373 | 374 | 375 | 376 | 377 | 378 | 380 | 381 | 382 | 383 | 385 | 386 | 387 | 389 | 420 | 421 | 423 | 500 | 501 | 502 | 503 | 504 | 505 | 506 | 507 | 508 | 509 | 590 | 591 | 592 | 593 | 594 | 595 | 596 | 597 | 598 | 599 | 670 | 672 | 673 | 674 | 675 | 676 | 677 | 678 | 679 | 680 | 681 | 682 | 683 | 685 | 686 | 687 | 688 | 689 | 690 | 691 | 692 | 850 | 852 | 853 | 855 | 856 | 880 | 886 | 960 | 961 | 962 | 963 | 964 | 965 | 966 | 967 | 968 | 970 | 971 | 972 | 973 | 974 | 975 | 976 | 977 | 992 | 993 | 994 | 995 | 996 | 998;
+export type CountryCode = 1 | 7 | 20 | 27 | 30 | 31 | 32 | 33 | 34 | 36 | 39 | 40 | 41 | 43 | 44 | 45 | 46 | 47 | 48 | 49 | 51 | 52 | 53 | 54 | 55 | 56 | 57 | 58 | 60 | 61 | 62 | 63 | 64 | 65 | 66 | 81 | 82 | 84 | 86 | 90 | 91 | 92 | 93 | 94 | 95 | 98 | 211 | 212 | 213 | 216 | 218 | 220 | 221 | 222 | 223 | 224 | 225 | 226 | 227 | 228 | 229 | 230 | 231 | 232 | 233 | 234 | 235 | 236 | 237 | 238 | 239 | 240 | 241 | 242 | 243 | 244 | 245 | 246 | 248 | 249 | 250 | 251 | 252 | 253 | 254 | 255 | 256 | 257 | 258 | 260 | 261 | 262 | 263 | 264 | 265 | 266 | 267 | 268 | 269 | 290 | 291 | 297 | 298 | 299 | 350 | 351 | 352 | 353 | 354 | 355 | 356 | 357 | 358 | 359 | 370 | 371 | 372 | 373 | 374 | 375 | 376 | 377 | 378 | 380 | 381 | 382 | 383 | 385 | 386 | 387 | 389 | 420 | 421 | 423 | 500 | 501 | 502 | 503 | 504 | 505 | 506 | 507 | 508 | 509 | 590 | 591 | 592 | 593 | 594 | 595 | 596 | 597 | 598 | 599 | 670 | 672 | 673 | 674 | 675 | 676 | 677 | 678 | 679 | 680 | 681 | 682 | 683 | 685 | 686 | 687 | 688 | 689 | 690 | 691 | 692 | 850 | 852 | 853 | 855 | 856 | 880 | 886 | 960 | 961 | 962 | 963 | 964 | 965 | 966 | 967 | 968 | 970 | 971 | 972 | 973 | 974 | 975 | 976 | 977 | 992 | 993 | 994 | 995 | 996 | 998;
 /**
  * The account number. It is made up of a country code and then the local number without the preceeding 0. For example, if a UK (+44) wa account is linked to the number 07123456789 then the account number will be 447123456789.
  */
-export declare type AccountNumber = `${number}`;
+export type AccountNumber = `${number}`;
+/**
+ * A new group or community has the format of a random number followed by `@g.us`
+ */
+export type GroupId = `${number}@${GroupChatServer}`;
 /**
  * A group chat ends with `@g.us` and usually has two parts, the timestamp of when it was created, and the user id of the number that created the group. For example `[creator number]-[timestamp]@g.us`
  *
@@ -28,7 +32,7 @@ export declare type AccountNumber = `${number}`;
  *
  * `"447123456789-1445627445@g.us"`
  */
-export declare type GroupChatId = `${AccountNumber}-${number}@${GroupChatServer}` | `${number}@${GroupChatServer}`;
+export type GroupChatId = `${AccountNumber}-${number}@${GroupChatServer}` | GroupId;
 /**
  * A contact id ends with `@c.us` and only contains the number of the contact. For example, if the country code of a contact is `44` and their number is `7123456789` then the contact id would be `447123456789@c.us`
  *
@@ -36,7 +40,7 @@ export declare type GroupChatId = `${AccountNumber}-${number}@${GroupChatServer}
  *
  * `"447123456789@c.us"`
  */
-export declare type ContactId = Brand<`${AccountNumber}@${ChatServer}`, "ContactId">;
+export type ContactId = Brand<`${AccountNumber}@${ChatServer}`, "ContactId">;
 /**
  * A chat id ends with `@c.us` or `@g.us` for group chats.
  *
@@ -46,7 +50,7 @@ export declare type ContactId = Brand<`${AccountNumber}@${ChatServer}`, "Contact
  * A group chat: `"447123456789@g.us"`
  *
  */
-export declare type ChatId = ContactId | GroupChatId;
+export type ChatId = ContactId | GroupChatId;
 /**
  * The id of a message. The format is `[boolean]_[ChatId]_[random character string]`
  *
@@ -54,7 +58,7 @@ export declare type ChatId = ContactId | GroupChatId;
  *
  * `"false_447123456789@c.us_9C4D0965EA5C09D591334AB6BDB07FEB"`
  */
-export declare type MessageId = Brand<`${boolean}_${ChatId}_${string}`, "MessageId">;
+export type MessageId = Brand<`${boolean}_${ChatId}_${string}`, "MessageId">;
 /**
  * This is a generic type alias for the content of a message
  *
@@ -62,8 +66,8 @@ export declare type MessageId = Brand<`${boolean}_${ChatId}_${string}`, "Message
  *
  * `"hello!"`
  */
-export declare type Content = Brand<string, "Content">;
-export declare type NonSerializedId = {
+export type Content = Brand<string, "Content">;
+export type NonSerializedId = {
     server: WaServers;
     user: AccountNumber;
     _serialized: ContactId;
@@ -80,7 +84,7 @@ export declare type NonSerializedId = {
  *
  * Learn more here: https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/Data_URIs
  */
-export declare type DataURL = Brand<`data:${string};base64,${Base64}`, "DataURL">;
+export type DataURL = Brand<`data:${string};base64,${Base64}`, "DataURL">;
 /**
  * Base64 is basically a file encoded as a string.
  *
@@ -88,19 +92,19 @@ export declare type DataURL = Brand<`data:${string};base64,${Base64}`, "DataURL"
  *
  * Learn more here: https://developer.mozilla.org/en-US/docs/Glossary/Base64
  */
-export declare type Base64 = Brand<string, "Base64">;
+export type Base64 = Brand<string, "Base64">;
 /**
  * The relative or absolute path of a file
  *
  * Learn more here: https://www.w3schools.com/html/html_filepaths.asp
  */
-export declare type FilePath = Brand<string, "FilePath">;
+export type FilePath = Brand<string, "FilePath">;
 /**
  * A URL of a file used with a GET request
  */
-export declare type GetURL = Brand<string, "GetURL">;
+export type GetURL = Brand<string, "GetURL">;
 /**
  * Some file based actions in open-wa are powerful enough to take a dataurl, url or filepath
  */
-export declare type AdvancedFile = DataURL | FilePath | GetURL;
+export type AdvancedFile = DataURL | FilePath | GetURL;
 export {};

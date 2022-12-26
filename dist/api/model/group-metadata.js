@@ -23,4 +23,3 @@ var GroupNotificationTypes;
     GroupNotificationTypes["ANNOUNCE"] = "announce";
     GroupNotificationTypes["RESTRICT"] = "restrict";
 })(GroupNotificationTypes = exports.GroupNotificationTypes || (exports.GroupNotificationTypes = {}));
-;

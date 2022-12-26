@@ -1,7 +1,11 @@
 "use strict";
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
 }) : (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
     o[k2] = m[k];
@@ -227,7 +231,7 @@ class QRManager {
                     }
                     if (!gotResult && (qrData === 'QR_CODE_SUCCESS' || qrData === md)) {
                         gotResult = true;
-                        spinner === null || spinner === void 0 ? void 0 : spinner.succeed(qrData === md ? "Multi device support for this project is EXPERIMENTAL. Some things may not work...." : "QR code scanned. Loading session...");
+                        spinner === null || spinner === void 0 ? void 0 : spinner.succeed("QR code scanned. Loading session...");
                         return resolve(yield isInsideChat(waPage).toPromise());
                     }
                     if (!gotResult)

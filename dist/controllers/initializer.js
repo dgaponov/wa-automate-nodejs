@@ -1,7 +1,11 @@
 "use strict";
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
 }) : (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
     o[k2] = m[k];
@@ -166,7 +170,7 @@ function create(config = {}) {
             /**
              * Check if the IGNORE folder exists, therefore, assume that the session is MD.
              */
-            const mdDir = config["userDataDir"] || `${(config === null || config === void 0 ? void 0 : config.inDocker) ? '/sessions' : (config === null || config === void 0 ? void 0 : config.sessionDataPath) || '.'}/_IGNORE_${(config === null || config === void 0 ? void 0 : config.sessionId) || 'session'}`;
+            const mdDir = config["userDataDir"] || `${(config === null || config === void 0 ? void 0 : config.sessionDataPath) || ((config === null || config === void 0 ? void 0 : config.inDocker) ? '/sessions' : (config === null || config === void 0 ? void 0 : config.sessionDataPath) || '.')}/_IGNORE_${(config === null || config === void 0 ? void 0 : config.sessionId) || 'session'}`;
             if (process.env.AUTO_MD && fs.existsSync(mdDir) && !(config === null || config === void 0 ? void 0 : config.multiDevice)) {
                 spinner.info(`Multi-Device directory detected. multiDevice set to true.`);
                 config.multiDevice = true;

@@ -176,6 +176,10 @@ const setupChatwootOutgoingMessageHandler = (cliConfig, client) => __awaiter(voi
             data,
             url,
             headers: Object.assign({ api_access_token }, _headers)
+        }).catch(error => {
+            var _a, _b;
+            __1.log.error(`CW REQ ERROR: ${(_a = error === null || error === void 0 ? void 0 : error.response) === null || _a === void 0 ? void 0 : _a.status} ${(_b = error === null || error === void 0 ? void 0 : error.response) === null || _b === void 0 ? void 0 : _b.message}`, error === null || error === void 0 ? void 0 : error.toJSON());
+            throw error;
         });
     };
     let { data: get_inbox } = yield cwReq('get', `inboxes/${inboxId}`);
@@ -311,6 +315,7 @@ const setupChatwootOutgoingMessageHandler = (cliConfig, client) => __awaiter(voi
         }
     });
     const sendConversationMessage = (content, contactId, message) => __awaiter(void 0, void 0, void 0, function* () {
+        __1.log.info(`INCOMING MESSAGE ${contactId}: ${content} ${message.id}`);
         try {
             const { data } = yield cwReq('post', `conversations/${convoReg[contactId]}/messages`, {
                 content,
@@ -326,6 +331,7 @@ const setupChatwootOutgoingMessageHandler = (cliConfig, client) => __awaiter(voi
     const sendAttachmentMessage = (content, contactId, message) => __awaiter(void 0, void 0, void 0, function* () {
         // decrypt message
         const file = yield client.decryptMedia(message);
+        __1.log.info(`INCOMING MESSAGE ATTACHMENT ${contactId}: ${content} ${message.id}`);
         let formData = new form_data_1.default();
         formData.append('attachments[]', Buffer.from(file.split(',')[1], 'base64'), {
             knownLength: 1,
