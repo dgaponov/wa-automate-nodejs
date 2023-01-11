@@ -20,7 +20,6 @@ const axios_1 = __importDefault(require("axios"));
 const setup_1 = require("./setup");
 const collections_1 = require("./collections");
 const server_1 = require("./server");
-const localtunnel_1 = __importDefault(require("localtunnel"));
 const chatwoot_1 = require("./integrations/chatwoot");
 let checkUrl = (s) => (typeof s === "string") && (0, is_url_superb_1.default)(s);
 const ready = (config) => __awaiter(void 0, void 0, void 0, function* () {
@@ -105,6 +104,7 @@ function start() {
         }
         try {
             const client = yield (0, index_1.create)(Object.assign({}, createConfig));
+            (0, server_1.setupMetaProcessMiddleware)(client, cliConfig);
             yield (0, server_1.setupHttpServer)(cliConfig);
             if (cliConfig.autoReject) {
                 yield client.autoReject(cliConfig.onCall);
@@ -201,13 +201,8 @@ function start() {
                 });
                 if (cliConfig.tunnel) {
                     spinner.info(`\n• Setting up external tunnel`);
-                    const tunnel = yield (0, localtunnel_1.default)({
-                        port: PORT,
-                        host: process.env.WA_TUNNEL_SERVER || "https://public.openwa.cloud",
-                        subdomain: yield client.getTunnelCode()
-                    });
-                    cliConfig.apiHost = cliConfig.tunnel = tunnel.url;
-                    spinner.succeed(`\n\t${(0, terminal_link_1.default)('External address', tunnel.url)}`);
+                    const tunnelUrl = yield (0, server_1.setupTunnel)(cliConfig, yield client.getTunnelCode(), PORT);
+                    spinner.succeed(`\n\t${(0, terminal_link_1.default)('External address', tunnelUrl)}`);
                 }
                 const apiDocsUrl = cliConfig.apiHost ? `${cliConfig.apiHost}/api-docs/ ` : `${cliConfig.host.includes('http') ? '' : 'http://'}${cliConfig.host}:${PORT}/api-docs/ `;
                 const link = (0, terminal_link_1.default)('API Explorer', apiDocsUrl);

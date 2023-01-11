@@ -1,0 +1,893 @@
+Index: .idea/vcs.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- .idea/vcs.xml	(date 1672048586953)
++++ .idea/vcs.xml	(date 1672048586953)
+@@ -0,0 +1,6 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<project version="4">
++  <component name="VcsDirectoryMappings">
++    <mapping directory="$PROJECT_DIR$" vcs="Git" />
++  </component>
++</project>
+Index: .idea/wa-automate-nodejs.iml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- .idea/wa-automate-nodejs.iml	(date 1672048586950)
++++ .idea/wa-automate-nodejs.iml	(date 1672048586950)
+@@ -0,0 +1,12 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<module type="WEB_MODULE" version="4">
++  <component name="NewModuleRootManager">
++    <content url="file://$MODULE_DIR$">
++      <excludeFolder url="file://$MODULE_DIR$/.tmp" />
++      <excludeFolder url="file://$MODULE_DIR$/temp" />
++      <excludeFolder url="file://$MODULE_DIR$/tmp" />
++    </content>
++    <orderEntry type="inheritedJdk" />
++    <orderEntry type="sourceFolder" forTests="false" />
++  </component>
++</module>
+Index: .idea/codeStyles/codeStyleConfig.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- .idea/codeStyles/codeStyleConfig.xml	(date 1672048586956)
++++ .idea/codeStyles/codeStyleConfig.xml	(date 1672048586956)
+@@ -0,0 +1,5 @@
++<component name="ProjectCodeStyleConfiguration">
++  <state>
++    <option name="USE_PER_PROJECT_SETTINGS" value="true" />
++  </state>
++</component>
+Index: .idea/codeStyles/Project.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- .idea/codeStyles/Project.xml	(date 1672048586961)
++++ .idea/codeStyles/Project.xml	(date 1672048586961)
+@@ -0,0 +1,59 @@
++<component name="ProjectCodeStyleConfiguration">
++  <code_scheme name="Project" version="173">
++    <HTMLCodeStyleSettings>
++      <option name="HTML_SPACE_INSIDE_EMPTY_TAG" value="true" />
++    </HTMLCodeStyleSettings>
++    <JSCodeStyleSettings version="0">
++      <option name="FORCE_SEMICOLON_STYLE" value="true" />
++      <option name="SPACE_BEFORE_FUNCTION_LEFT_PARENTH" value="false" />
++      <option name="USE_DOUBLE_QUOTES" value="false" />
++      <option name="FORCE_QUOTE_STYlE" value="true" />
++      <option name="ENFORCE_TRAILING_COMMA" value="Remove" />
++      <option name="SPACES_WITHIN_OBJECT_LITERAL_BRACES" value="true" />
++      <option name="SPACES_WITHIN_IMPORTS" value="true" />
++    </JSCodeStyleSettings>
++    <TypeScriptCodeStyleSettings version="0">
++      <option name="FORCE_SEMICOLON_STYLE" value="true" />
++      <option name="SPACE_BEFORE_FUNCTION_LEFT_PARENTH" value="false" />
++      <option name="USE_DOUBLE_QUOTES" value="false" />
++      <option name="FORCE_QUOTE_STYlE" value="true" />
++      <option name="ENFORCE_TRAILING_COMMA" value="Remove" />
++      <option name="SPACES_WITHIN_OBJECT_LITERAL_BRACES" value="true" />
++      <option name="SPACES_WITHIN_IMPORTS" value="true" />
++    </TypeScriptCodeStyleSettings>
++    <VueCodeStyleSettings>
++      <option name="INTERPOLATION_NEW_LINE_AFTER_START_DELIMITER" value="false" />
++      <option name="INTERPOLATION_NEW_LINE_BEFORE_END_DELIMITER" value="false" />
++    </VueCodeStyleSettings>
++    <codeStyleSettings language="HTML">
++      <option name="SOFT_MARGINS" value="80" />
++      <indentOptions>
++        <option name="INDENT_SIZE" value="2" />
++        <option name="CONTINUATION_INDENT_SIZE" value="2" />
++        <option name="TAB_SIZE" value="2" />
++      </indentOptions>
++    </codeStyleSettings>
++    <codeStyleSettings language="JavaScript">
++      <option name="SOFT_MARGINS" value="80" />
++      <indentOptions>
++        <option name="INDENT_SIZE" value="2" />
++        <option name="CONTINUATION_INDENT_SIZE" value="2" />
++        <option name="TAB_SIZE" value="2" />
++      </indentOptions>
++    </codeStyleSettings>
++    <codeStyleSettings language="TypeScript">
++      <option name="SOFT_MARGINS" value="80" />
++      <indentOptions>
++        <option name="INDENT_SIZE" value="2" />
++        <option name="CONTINUATION_INDENT_SIZE" value="2" />
++        <option name="TAB_SIZE" value="2" />
++      </indentOptions>
++    </codeStyleSettings>
++    <codeStyleSettings language="Vue">
++      <option name="SOFT_MARGINS" value="80" />
++      <indentOptions>
++        <option name="CONTINUATION_INDENT_SIZE" value="2" />
++      </indentOptions>
++    </codeStyleSettings>
++  </code_scheme>
++</component>
+Index: .idea/workspace.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- .idea/workspace.xml	(date 1673200111456)
++++ .idea/workspace.xml	(date 1673200111456)
+@@ -0,0 +1,740 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<project version="4">
++  <component name="BranchesTreeState">
++    <expand>
++      <path>
++        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
++        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
++      </path>
++      <path>
++        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
++        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
++      </path>
++      <path>
++        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
++        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
++        <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
++      </path>
++      <path>
++        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
++        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
++        <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
++        <item name="GROUP_NODE:dependabot" type="e8cecc67:BranchNodeDescriptor" />
++      </path>
++      <path>
++        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
++        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
++        <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
++        <item name="GROUP_NODE:dependabot" type="e8cecc67:BranchNodeDescriptor" />
++        <item name="GROUP_NODE:npm_and_yarn" type="e8cecc67:BranchNodeDescriptor" />
++      </path>
++      <path>
++        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
++        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
++        <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
++        <item name="GROUP_NODE:dependabot" type="e8cecc67:BranchNodeDescriptor" />
++        <item name="GROUP_NODE:npm_and_yarn" type="e8cecc67:BranchNodeDescriptor" />
++        <item name="GROUP_NODE:types" type="e8cecc67:BranchNodeDescriptor" />
++      </path>
++      <path>
++        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
++        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
++        <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
++        <item name="GROUP_NODE:dependabot" type="e8cecc67:BranchNodeDescriptor" />
++        <item name="GROUP_NODE:npm_and_yarn" type="e8cecc67:BranchNodeDescriptor" />
++        <item name="GROUP_NODE:typescript-eslint" type="e8cecc67:BranchNodeDescriptor" />
++      </path>
++      <path>
++        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
++        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
++        <item name="GROUP_NODE:upstream" type="e8cecc67:BranchNodeDescriptor" />
++      </path>
++      <path>
++        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
++        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
++        <item name="GROUP_NODE:upstream" type="e8cecc67:BranchNodeDescriptor" />
++        <item name="GROUP_NODE:dependabot" type="e8cecc67:BranchNodeDescriptor" />
++      </path>
++      <path>
++        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
++        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
++        <item name="GROUP_NODE:upstream" type="e8cecc67:BranchNodeDescriptor" />
++        <item name="GROUP_NODE:dependabot" type="e8cecc67:BranchNodeDescriptor" />
++        <item name="GROUP_NODE:npm_and_yarn" type="e8cecc67:BranchNodeDescriptor" />
++      </path>
++    </expand>
++    <select>
++      <path>
++        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
++        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
++        <item name="BRANCH:latest" type="e8cecc67:BranchNodeDescriptor" />
++      </path>
++    </select>
++  </component>
++  <component name="ChangeListManager">
++    <list default="true" id="cb1619e8-d8d1-41c8-993f-0871f292596a" name="Default Changelist" comment="update build">
++      <change afterPath="$PROJECT_DIR$/.idea/codeStyles/Project.xml" afterDir="false" />
++      <change afterPath="$PROJECT_DIR$/.idea/codeStyles/codeStyleConfig.xml" afterDir="false" />
++      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
++      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
++      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
++      <change afterPath="$PROJECT_DIR$/.idea/wa-automate-nodejs.iml" afterDir="false" />
++      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
++    </list>
++    <list id="ac7ac536-fa6b-4321-a3b6-666384daf2f8" name="upd" comment="upd">
++      <changelist_data name="Daniil Gaponov" email="dagaponov@croc.ru" date="1639300430000" />
++    </list>
++    <option name="SHOW_DIALOG" value="false" />
++    <option name="HIGHLIGHT_CONFLICTS" value="true" />
++    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
++    <option name="LAST_RESOLUTION" value="IGNORE" />
++  </component>
++  <component name="Git.Settings">
++    <option name="RECENT_BRANCH_BY_REPOSITORY">
++      <map>
++        <entry key="$PROJECT_DIR$" value="for_me_branch" />
++      </map>
++    </option>
++    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
++    <option name="RESET_MODE" value="HARD" />
++  </component>
++  <component name="GitRewordedCommitMessages">
++    <option name="commitMessagesMapping">
++      <RewordedCommitMessageMapping>
++        <option name="originalMessage" value="upd" />
++        <option name="rewordedMessage" value="upd" />
++      </RewordedCommitMessageMapping>
++    </option>
++    <option name="currentCommit" value="1" />
++    <option name="onto" value="f40d4c0d14d6ee7333140db81e61d6507069aa1a" />
++  </component>
++  <component name="GitToolBoxStore">
++    <option name="projectConfigVersion" value="2" />
++    <option name="recentBranches">
++      <RecentBranches>
++        <option name="branchesForRepo">
++          <list>
++            <RecentBranchesForRepo>
++              <option name="branches">
++                <list>
++                  <RecentBranch>
++                    <option name="branchName" value="latest" />
++                    <option name="lastUsedInstant" value="1645688998" />
++                  </RecentBranch>
++                  <RecentBranch>
++                    <option name="branchName" value="for_me_branch" />
++                    <option name="lastUsedInstant" value="1644614915" />
++                  </RecentBranch>
++                  <RecentBranch>
++                    <option name="branchName" value="upstream-master" />
++                    <option name="lastUsedInstant" value="1639299618" />
++                  </RecentBranch>
++                  <RecentBranch>
++                    <option name="branchName" value="new" />
++                    <option name="lastUsedInstant" value="1639062594" />
++                  </RecentBranch>
++                  <RecentBranch>
++                    <option name="branchName" value="master" />
++                    <option name="lastUsedInstant" value="1639044639" />
++                  </RecentBranch>
++                </list>
++              </option>
++              <option name="repositoryRootUrl" value="file://$PROJECT_DIR$" />
++            </RecentBranchesForRepo>
++          </list>
++        </option>
++      </RecentBranches>
++    </option>
++  </component>
++  <component name="ProjectId" id="1ybEQ8KmPsc8AVXD1DhySBVXMpp" />
++  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
++  <component name="ProjectViewState">
++    <option name="hideEmptyMiddlePackages" value="true" />
++    <option name="showLibraryContents" value="true" />
++  </component>
++  <component name="PropertiesComponent">
++    <property name="Git.Branch.Popup.ShowAllRemotes" value="true" />
++    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
++    <property name="WebServerToolWindowFactoryState" value="false" />
++    <property name="node.js.detected.package.eslint" value="true" />
++    <property name="node.js.detected.package.tslint" value="true" />
++    <property name="node.js.path.for.package.eslint" value="project" />
++    <property name="node.js.path.for.package.tslint" value="project" />
++    <property name="node.js.selected.package.eslint" value="(autodetect)" />
++    <property name="node.js.selected.package.tslint" value="(autodetect)" />
++    <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
++    <property name="nodejs_npm_path_reset_for_default_project" value="true" />
++    <property name="nodejs_package_manager_path" value="npm" />
++    <property name="prettierjs.PrettierConfiguration.Package" value="$PROJECT_DIR$/node_modules/prettier" />
++    <property name="ts.external.directory.path" value="$PROJECT_DIR$/node_modules/typescript/lib" />
++    <property name="vue.rearranger.settings.migration" value="true" />
++  </component>
++  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
++  <component name="TaskManager">
++    <task active="true" id="Default" summary="Default task">
++      <changelist id="cb1619e8-d8d1-41c8-993f-0871f292596a" name="Default Changelist" comment="" />
++      <created>1632511872802</created>
++      <option name="number" value="Default" />
++      <option name="presentableId" value="Default" />
++      <updated>1632511872802</updated>
++      <workItem from="1632511875642" duration="2391000" />
++      <workItem from="1633029634262" duration="38000" />
++      <workItem from="1633290744509" duration="1338000" />
++      <workItem from="1637685458155" duration="508000" />
++      <workItem from="1637686767073" duration="1450000" />
++      <workItem from="1638539168019" duration="1164000" />
++      <workItem from="1638541199769" duration="481000" />
++      <workItem from="1638542485856" duration="2306000" />
++      <workItem from="1638573076621" duration="7305000" />
++      <workItem from="1639039154342" duration="698000" />
++      <workItem from="1639040156747" duration="6735000" />
++      <workItem from="1639056563329" duration="4642000" />
++      <workItem from="1639062171148" duration="664000" />
++      <workItem from="1639063273798" duration="2721000" />
++      <workItem from="1639075113911" duration="661000" />
++      <workItem from="1639076902198" duration="972000" />
++      <workItem from="1639144641380" duration="66000" />
++      <workItem from="1639252638626" duration="296000" />
++      <workItem from="1639254414790" duration="3648000" />
++      <workItem from="1639297969671" duration="21000" />
++      <workItem from="1639298346864" duration="2092000" />
++      <workItem from="1639300696149" duration="1573000" />
++      <workItem from="1641550191044" duration="333000" />
++      <workItem from="1641550792334" duration="54000" />
++      <workItem from="1641550888349" duration="848000" />
++      <workItem from="1642427741354" duration="2296000" />
++      <workItem from="1642602450086" duration="696000" />
++      <workItem from="1643352654062" duration="6000" />
++      <workItem from="1643548666222" duration="496000" />
++      <workItem from="1643549601342" duration="899000" />
++      <workItem from="1643699036208" duration="27000" />
++      <workItem from="1644612265782" duration="1701000" />
++      <workItem from="1644614101195" duration="34000" />
++      <workItem from="1644614545360" duration="759000" />
++      <workItem from="1644615725150" duration="870000" />
++      <workItem from="1645396267414" duration="1126000" />
++      <workItem from="1645688968099" duration="178000" />
++      <workItem from="1645702426837" duration="154000" />
++      <workItem from="1645703171071" duration="1111000" />
++      <workItem from="1645705469383" duration="233000" />
++      <workItem from="1645705793253" duration="622000" />
++      <workItem from="1645707338445" duration="613000" />
++      <workItem from="1645710922605" duration="503000" />
++      <workItem from="1645790773285" duration="1074000" />
++      <workItem from="1645792327571" duration="1276000" />
++      <workItem from="1645860971138" duration="8643000" />
++      <workItem from="1645879900042" duration="186000" />
++      <workItem from="1645882055111" duration="223000" />
++      <workItem from="1645889074936" duration="640000" />
++      <workItem from="1646596903915" duration="1380000" />
++      <workItem from="1647035644142" duration="90000" />
++      <workItem from="1647781946367" duration="277000" />
++      <workItem from="1647783276480" duration="1168000" />
++      <workItem from="1649197783321" duration="663000" />
++      <workItem from="1650290394316" duration="1215000" />
++      <workItem from="1651067619091" duration="190000" />
++      <workItem from="1651068436067" duration="26000" />
++      <workItem from="1655108263420" duration="620000" />
++      <workItem from="1655109632870" duration="15000" />
++      <workItem from="1655110016132" duration="683000" />
++      <workItem from="1660556345908" duration="570000" />
++      <workItem from="1660807433241" duration="154000" />
++      <workItem from="1661587288505" duration="3343000" />
++      <workItem from="1662499243074" duration="35000" />
++      <workItem from="1662534878011" duration="55000" />
++      <workItem from="1662541761959" duration="2000" />
++      <workItem from="1662643181588" duration="132000" />
++      <workItem from="1662923246641" duration="281000" />
++      <workItem from="1662923678753" duration="1203000" />
++      <workItem from="1665058134701" duration="820000" />
++      <workItem from="1665584338799" duration="600000" />
++      <workItem from="1665669285946" duration="9000" />
++      <workItem from="1665983826755" duration="265000" />
++      <workItem from="1665985912235" duration="1114000" />
++      <workItem from="1665987527754" duration="881000" />
++      <workItem from="1666016208026" duration="208000" />
++      <workItem from="1666062074936" duration="309000" />
++      <workItem from="1666062468616" duration="1000000" />
++      <workItem from="1666063509742" duration="269000" />
++      <workItem from="1666063955008" duration="1151000" />
++      <workItem from="1666065271094" duration="860000" />
++      <workItem from="1666066467468" duration="1722000" />
++      <workItem from="1667377913722" duration="262000" />
++      <workItem from="1667380185583" duration="1757000" />
++      <workItem from="1667381989228" duration="289000" />
++      <workItem from="1667384268004" duration="1301000" />
++      <workItem from="1668612231313" duration="759000" />
++      <workItem from="1669293158274" duration="336000" />
++      <workItem from="1672049267014" duration="855000" />
++      <workItem from="1672050918674" duration="166000" />
++      <workItem from="1672051177407" duration="1345000" />
++      <workItem from="1672441872156" duration="4000" />
++      <workItem from="1672731696618" duration="713000" />
++      <workItem from="1673199796848" duration="313000" />
++    </task>
++    <task id="LOCAL-00003" summary="fix license">
++      <created>1638542799761</created>
++      <option name="number" value="00003" />
++      <option name="presentableId" value="LOCAL-00003" />
++      <option name="project" value="LOCAL" />
++      <updated>1638542799762</updated>
++    </task>
++    <task id="LOCAL-00004" summary="fix license">
++      <created>1638542883143</created>
++      <option name="number" value="00004" />
++      <option name="presentableId" value="LOCAL-00004" />
++      <option name="project" value="LOCAL" />
++      <updated>1638542883144</updated>
++    </task>
++    <task id="LOCAL-00005" summary="fix license">
++      <created>1639039834487</created>
++      <option name="number" value="00005" />
++      <option name="presentableId" value="LOCAL-00005" />
++      <option name="project" value="LOCAL" />
++      <updated>1639039834487</updated>
++    </task>
++    <task id="LOCAL-00006" summary="fix license">
++      <created>1639040424528</created>
++      <option name="number" value="00006" />
++      <option name="presentableId" value="LOCAL-00006" />
++      <option name="project" value="LOCAL" />
++      <updated>1639040424529</updated>
++    </task>
++    <task id="LOCAL-00007" summary="fix license">
++      <created>1639041999664</created>
++      <option name="number" value="00007" />
++      <option name="presentableId" value="LOCAL-00007" />
++      <option name="project" value="LOCAL" />
++      <updated>1639041999664</updated>
++    </task>
++    <task id="LOCAL-00008" summary="fix license">
++      <created>1639042015012</created>
++      <option name="number" value="00008" />
++      <option name="presentableId" value="LOCAL-00008" />
++      <option name="project" value="LOCAL" />
++      <updated>1639042015013</updated>
++    </task>
++    <task id="LOCAL-00009" summary="fix license">
++      <created>1639043890171</created>
++      <option name="number" value="00009" />
++      <option name="presentableId" value="LOCAL-00009" />
++      <option name="project" value="LOCAL" />
++      <updated>1639043890172</updated>
++    </task>
++    <task id="LOCAL-00010" summary="fix license">
++      <created>1639048275157</created>
++      <option name="number" value="00010" />
++      <option name="presentableId" value="LOCAL-00010" />
++      <option name="project" value="LOCAL" />
++      <updated>1639048275158</updated>
++    </task>
++    <task id="LOCAL-00011" summary="fix license">
++      <created>1639060487271</created>
++      <option name="number" value="00011" />
++      <option name="presentableId" value="LOCAL-00011" />
++      <option name="project" value="LOCAL" />
++      <updated>1639060487272</updated>
++    </task>
++    <task id="LOCAL-00012" summary="fix license">
++      <created>1639062826519</created>
++      <option name="number" value="00012" />
++      <option name="presentableId" value="LOCAL-00012" />
++      <option name="project" value="LOCAL" />
++      <updated>1639062826520</updated>
++    </task>
++    <task id="LOCAL-00013" summary="fix license">
++      <created>1639074386561</created>
++      <option name="number" value="00013" />
++      <option name="presentableId" value="LOCAL-00013" />
++      <option name="project" value="LOCAL" />
++      <updated>1639074386561</updated>
++    </task>
++    <task id="LOCAL-00014" summary="add qrcode package">
++      <created>1639254937244</created>
++      <option name="number" value="00014" />
++      <option name="presentableId" value="LOCAL-00014" />
++      <option name="project" value="LOCAL" />
++      <updated>1639254937245</updated>
++    </task>
++    <task id="LOCAL-00015" summary="upd">
++      <created>1639299603573</created>
++      <option name="number" value="00015" />
++      <option name="presentableId" value="LOCAL-00015" />
++      <option name="project" value="LOCAL" />
++      <updated>1639299603574</updated>
++    </task>
++    <task id="LOCAL-00016" summary="upd">
++      <created>1639300430710</created>
++      <option name="number" value="00016" />
++      <option name="presentableId" value="LOCAL-00016" />
++      <option name="project" value="LOCAL" />
++      <updated>1639300430710</updated>
++    </task>
++    <task id="LOCAL-00017" summary="upd">
++      <created>1639300713971</created>
++      <option name="number" value="00017" />
++      <option name="presentableId" value="LOCAL-00017" />
++      <option name="project" value="LOCAL" />
++      <updated>1639300713971</updated>
++    </task>
++    <task id="LOCAL-00018" summary="upd">
++      <created>1639302264574</created>
++      <option name="number" value="00018" />
++      <option name="presentableId" value="LOCAL-00018" />
++      <option name="project" value="LOCAL" />
++      <updated>1639302264575</updated>
++    </task>
++    <task id="LOCAL-00019" summary="upd">
++      <created>1642430246537</created>
++      <option name="number" value="00019" />
++      <option name="presentableId" value="LOCAL-00019" />
++      <option name="project" value="LOCAL" />
++      <updated>1642430246538</updated>
++    </task>
++    <task id="LOCAL-00020" summary="upd">
++      <created>1644613273228</created>
++      <option name="number" value="00020" />
++      <option name="presentableId" value="LOCAL-00020" />
++      <option name="project" value="LOCAL" />
++      <updated>1644613273228</updated>
++    </task>
++    <task id="LOCAL-00021" summary="upd">
++      <created>1644615290100</created>
++      <option name="number" value="00021" />
++      <option name="presentableId" value="LOCAL-00021" />
++      <option name="project" value="LOCAL" />
++      <updated>1644615290100</updated>
++    </task>
++    <task id="LOCAL-00022" summary="upd">
++      <created>1644615979762</created>
++      <option name="number" value="00022" />
++      <option name="presentableId" value="LOCAL-00022" />
++      <option name="project" value="LOCAL" />
++      <updated>1644615979762</updated>
++    </task>
++    <task id="LOCAL-00023" summary="upd">
++      <created>1645791079252</created>
++      <option name="number" value="00023" />
++      <option name="presentableId" value="LOCAL-00023" />
++      <option name="project" value="LOCAL" />
++      <updated>1645791079321</updated>
++    </task>
++    <task id="LOCAL-00024" summary="upd">
++      <created>1645791413141</created>
++      <option name="number" value="00024" />
++      <option name="presentableId" value="LOCAL-00024" />
++      <option name="project" value="LOCAL" />
++      <updated>1645791413142</updated>
++    </task>
++    <task id="LOCAL-00025" summary="upd">
++      <created>1645861305806</created>
++      <option name="number" value="00025" />
++      <option name="presentableId" value="LOCAL-00025" />
++      <option name="project" value="LOCAL" />
++      <updated>1645861305806</updated>
++    </task>
++    <task id="LOCAL-00026" summary="upd">
++      <created>1645866221798</created>
++      <option name="number" value="00026" />
++      <option name="presentableId" value="LOCAL-00026" />
++      <option name="project" value="LOCAL" />
++      <updated>1645866221798</updated>
++    </task>
++    <task id="LOCAL-00027" summary="upd">
++      <created>1645868492693</created>
++      <option name="number" value="00027" />
++      <option name="presentableId" value="LOCAL-00027" />
++      <option name="project" value="LOCAL" />
++      <updated>1645868492693</updated>
++    </task>
++    <task id="LOCAL-00028" summary="upd">
++      <created>1645871335590</created>
++      <option name="number" value="00028" />
++      <option name="presentableId" value="LOCAL-00028" />
++      <option name="project" value="LOCAL" />
++      <updated>1645871335590</updated>
++    </task>
++    <task id="LOCAL-00029" summary="upd">
++      <created>1645872752613</created>
++      <option name="number" value="00029" />
++      <option name="presentableId" value="LOCAL-00029" />
++      <option name="project" value="LOCAL" />
++      <updated>1645872752614</updated>
++    </task>
++    <task id="LOCAL-00030" summary="upd">
++      <created>1645873803664</created>
++      <option name="number" value="00030" />
++      <option name="presentableId" value="LOCAL-00030" />
++      <option name="project" value="LOCAL" />
++      <updated>1645873803665</updated>
++    </task>
++    <task id="LOCAL-00031" summary="upd">
++      <created>1655110083142</created>
++      <option name="number" value="00031" />
++      <option name="presentableId" value="LOCAL-00031" />
++      <option name="project" value="LOCAL" />
++      <updated>1655110083143</updated>
++    </task>
++    <task id="LOCAL-00032" summary="upd">
++      <created>1661588587049</created>
++      <option name="number" value="00032" />
++      <option name="presentableId" value="LOCAL-00032" />
++      <option name="project" value="LOCAL" />
++      <updated>1661588587049</updated>
++    </task>
++    <task id="LOCAL-00033" summary="upd">
++      <created>1661668501859</created>
++      <option name="number" value="00033" />
++      <option name="presentableId" value="LOCAL-00033" />
++      <option name="project" value="LOCAL" />
++      <updated>1661668501860</updated>
++    </task>
++    <task id="LOCAL-00034" summary="upd">
++      <created>1661669342819</created>
++      <option name="number" value="00034" />
++      <option name="presentableId" value="LOCAL-00034" />
++      <option name="project" value="LOCAL" />
++      <updated>1661669342820</updated>
++    </task>
++    <task id="LOCAL-00035" summary="upd">
++      <created>1665987017587</created>
++      <option name="number" value="00035" />
++      <option name="presentableId" value="LOCAL-00035" />
++      <option name="project" value="LOCAL" />
++      <updated>1665987017588</updated>
++    </task>
++    <task id="LOCAL-00036" summary="upd">
++      <created>1665987806954</created>
++      <option name="number" value="00036" />
++      <option name="presentableId" value="LOCAL-00036" />
++      <option name="project" value="LOCAL" />
++      <updated>1665987806954</updated>
++    </task>
++    <task id="LOCAL-00037" summary="upd">
++      <created>1666016339255</created>
++      <option name="number" value="00037" />
++      <option name="presentableId" value="LOCAL-00037" />
++      <option name="project" value="LOCAL" />
++      <updated>1666016339255</updated>
++    </task>
++    <task id="LOCAL-00038" summary="upd">
++      <created>1666063768871</created>
++      <option name="number" value="00038" />
++      <option name="presentableId" value="LOCAL-00038" />
++      <option name="project" value="LOCAL" />
++      <updated>1666063768871</updated>
++    </task>
++    <task id="LOCAL-00039" summary="upd">
++      <created>1666064243433</created>
++      <option name="number" value="00039" />
++      <option name="presentableId" value="LOCAL-00039" />
++      <option name="project" value="LOCAL" />
++      <updated>1666064243433</updated>
++    </task>
++    <task id="LOCAL-00040" summary="upd">
++      <created>1666064583010</created>
++      <option name="number" value="00040" />
++      <option name="presentableId" value="LOCAL-00040" />
++      <option name="project" value="LOCAL" />
++      <updated>1666064583010</updated>
++    </task>
++    <task id="LOCAL-00041" summary="upd">
++      <created>1666064821967</created>
++      <option name="number" value="00041" />
++      <option name="presentableId" value="LOCAL-00041" />
++      <option name="project" value="LOCAL" />
++      <updated>1666064821967</updated>
++    </task>
++    <task id="LOCAL-00042" summary="upd">
++      <created>1666065106526</created>
++      <option name="number" value="00042" />
++      <option name="presentableId" value="LOCAL-00042" />
++      <option name="project" value="LOCAL" />
++      <updated>1666065106526</updated>
++    </task>
++    <task id="LOCAL-00043" summary="upd">
++      <created>1666065532671</created>
++      <option name="number" value="00043" />
++      <option name="presentableId" value="LOCAL-00043" />
++      <option name="project" value="LOCAL" />
++      <updated>1666065532671</updated>
++    </task>
++    <task id="LOCAL-00044" summary="upd">
++      <created>1666065730208</created>
++      <option name="number" value="00044" />
++      <option name="presentableId" value="LOCAL-00044" />
++      <option name="project" value="LOCAL" />
++      <updated>1666065730208</updated>
++    </task>
++    <task id="LOCAL-00045" summary="upd">
++      <created>1666066729275</created>
++      <option name="number" value="00045" />
++      <option name="presentableId" value="LOCAL-00045" />
++      <option name="project" value="LOCAL" />
++      <updated>1666066729275</updated>
++    </task>
++    <task id="LOCAL-00046" summary="upd">
++      <created>1666066752039</created>
++      <option name="number" value="00046" />
++      <option name="presentableId" value="LOCAL-00046" />
++      <option name="project" value="LOCAL" />
++      <updated>1666066752039</updated>
++    </task>
++    <task id="LOCAL-00047" summary="tst">
++      <created>1667377955043</created>
++      <option name="number" value="00047" />
++      <option name="presentableId" value="LOCAL-00047" />
++      <option name="project" value="LOCAL" />
++      <updated>1667377955043</updated>
++    </task>
++    <task id="LOCAL-00048" summary="update build">
++      <created>1667382214763</created>
++      <option name="number" value="00048" />
++      <option name="presentableId" value="LOCAL-00048" />
++      <option name="project" value="LOCAL" />
++      <updated>1667382214763</updated>
++    </task>
++    <task id="LOCAL-00049" summary="update build">
++      <created>1668612316088</created>
++      <option name="number" value="00049" />
++      <option name="presentableId" value="LOCAL-00049" />
++      <option name="project" value="LOCAL" />
++      <updated>1668612316088</updated>
++    </task>
++    <task id="LOCAL-00050" summary="update build">
++      <created>1668612927769</created>
++      <option name="number" value="00050" />
++      <option name="presentableId" value="LOCAL-00050" />
++      <option name="project" value="LOCAL" />
++      <updated>1668612927773</updated>
++    </task>
++    <task id="LOCAL-00051" summary="update build">
++      <created>1672050106599</created>
++      <option name="number" value="00051" />
++      <option name="presentableId" value="LOCAL-00051" />
++      <option name="project" value="LOCAL" />
++      <updated>1672050106600</updated>
++    </task>
++    <option name="localTasksCounter" value="52" />
++    <servers />
++  </component>
++  <component name="TypeScriptGeneratedFilesManager">
++    <option name="version" value="3" />
++  </component>
++  <component name="Vcs.Log.History.Properties">
++    <option name="COLUMN_ORDER">
++      <list>
++        <option value="0" />
++        <option value="2" />
++        <option value="3" />
++        <option value="1" />
++      </list>
++    </option>
++  </component>
++  <component name="Vcs.Log.Tabs.Properties">
++    <option name="TAB_STATES">
++      <map>
++        <entry key="MAIN">
++          <value>
++            <State>
++              <option name="FILTERS">
++                <map>
++                  <entry key="branch">
++                    <value>
++                      <list>
++                        <option value="latest" />
++                      </list>
++                    </value>
++                  </entry>
++                </map>
++              </option>
++              <option name="COLUMN_WIDTH">
++                <map>
++                  <entry key="2" value="184" />
++                  <entry key="3" value="181" />
++                </map>
++              </option>
++            </State>
++          </value>
++        </entry>
++      </map>
++    </option>
++    <option name="RECENT_FILTERS">
++      <map>
++        <entry key="User">
++          <value>
++            <list>
++              <RecentGroup>
++                <option name="FILTER_VALUES">
++                  <option value="*" />
++                </option>
++              </RecentGroup>
++            </list>
++          </value>
++        </entry>
++      </map>
++    </option>
++    <option name="oldMeFiltersMigrated" value="true" />
++  </component>
++  <component name="VcsManagerConfiguration">
++    <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
++    <option name="CHECK_NEW_TODO" value="false" />
++    <MESSAGE value="fix license" />
++    <MESSAGE value="add qrcode package" />
++    <MESSAGE value="upd" />
++    <MESSAGE value="tst" />
++    <MESSAGE value="update build" />
++    <option name="LAST_COMMIT_MESSAGE" value="update build" />
++  </component>
++  <component name="WindowStateProjectService">
++    <state x="449" y="260" key="#Notifications" timestamp="1667381980514">
++      <screen x="0" y="25" width="1440" height="814" />
++    </state>
++    <state x="449" y="260" key="#Notifications/0.25.1440.814@0.25.1440.814" timestamp="1667381980514" />
++    <state x="477" y="25" key="CommitChangelistDialog2" timestamp="1672050105987">
++      <screen x="0" y="25" width="1920" height="994" />
++    </state>
++    <state x="358" y="25" key="CommitChangelistDialog2/0.25.1440.814@0.25.1440.814" timestamp="1668612926896" />
++    <state x="408" y="25" key="CommitChangelistDialog2/0.25.1440.815@0.25.1440.815" timestamp="1666065729790" />
++    <state x="477" y="25" key="CommitChangelistDialog2/0.25.1920.994@0.25.1920.994" timestamp="1672050105987" />
++    <state x="75" y="108" width="1290" height="649" key="DiffContextDialog" timestamp="1668612827131">
++      <screen x="0" y="25" width="1440" height="814" />
++    </state>
++    <state x="75" y="108" width="1290" height="649" key="DiffContextDialog/0.25.1440.814@0.25.1440.814" timestamp="1668612827131" />
++    <state x="75" y="108" width="1290" height="649" key="DiffContextDialog/0.25.1440.815@0.25.1440.815" timestamp="1667384338703" />
++    <state x="599" y="275" key="Git.Rebase.Log.Action.NewCommitMessage.Dialog" timestamp="1667382040808">
++      <screen x="0" y="25" width="1440" height="814" />
++    </state>
++    <state x="599" y="275" key="Git.Rebase.Log.Action.NewCommitMessage.Dialog/0.25.1440.814@0.25.1440.814" timestamp="1667382040808" />
++    <state x="0" y="25" width="1440" height="814" key="MergeDialog" timestamp="1672048580924">
++      <screen x="0" y="25" width="1920" height="994" />
++    </state>
++    <state x="0" y="25" width="1440" height="814" key="MergeDialog/0.25.1440.814@0.25.1440.814" timestamp="1668612780905" />
++    <state x="144" y="92" key="MergeDialog/0.25.1440.815@0.25.1440.815" timestamp="1666062194692" />
++    <state x="0" y="25" key="MergeDialog/0.25.1920.994@0.25.1920.994" timestamp="1672048580924" />
++    <state x="227" y="318" key="MultipleFileMergeDialog" timestamp="1672048580954">
++      <screen x="0" y="25" width="1920" height="994" />
++    </state>
++    <state x="170" y="265" key="MultipleFileMergeDialog/0.25.1440.814@0.25.1440.814" timestamp="1668612780954" />
++    <state x="358" y="197" key="MultipleFileMergeDialog/0.25.1440.815@0.25.1440.815" timestamp="1666062194742" />
++    <state x="227" y="318" key="MultipleFileMergeDialog/0.25.1920.994@0.25.1920.994" timestamp="1672048580954" />
++    <state x="427" y="200" key="Vcs.Push.Dialog.v2" timestamp="1672050107643">
++      <screen x="0" y="25" width="1920" height="994" />
++    </state>
++    <state x="320" y="168" key="Vcs.Push.Dialog.v2/0.25.1440.814@0.25.1440.814" timestamp="1668612961199" />
++    <state x="320" y="168" key="Vcs.Push.Dialog.v2/0.25.1440.815@0.25.1440.815" timestamp="1666065731189" />
++    <state x="427" y="197" key="Vcs.Push.Dialog.v2/0.25.1920.979@0.25.1920.979" timestamp="1665059187367" />
++    <state x="427" y="200" key="Vcs.Push.Dialog.v2/0.25.1920.994@0.25.1920.994" timestamp="1672050107643" />
++    <state x="690" y="269" width="756" height="602" key="find.popup" timestamp="1673199812475">
++      <screen x="0" y="25" width="1920" height="996" />
++    </state>
++    <state x="496" y="227" width="567" height="491" key="find.popup/0.25.1440.815@0.25.1440.815" timestamp="1666062744271" />
++    <state x="661" y="271" width="756" height="599" key="find.popup/0.25.1920.993@0.25.1920.993" timestamp="1669293200402" />
++    <state x="690" y="269" width="756" height="600" key="find.popup/0.25.1920.994@0.25.1920.994" timestamp="1672731770564" />
++    <state x="690" y="269" width="756" height="602" key="find.popup/0.25.1920.996@0.25.1920.996" timestamp="1673199812475" />
++    <state x="385" y="164" width="670" height="676" key="search.everywhere.popup" timestamp="1666064530611">
++      <screen x="0" y="25" width="1440" height="815" />
++    </state>
++    <state x="385" y="164" width="670" height="676" key="search.everywhere.popup/0.25.1440.815@0.25.1440.815" timestamp="1666064530611" />
++  </component>
++</project>
+\ No newline at end of file
+Index: .idea/inspectionProfiles/Project_Default.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- .idea/inspectionProfiles/Project_Default.xml	(date 1672048586972)
++++ .idea/inspectionProfiles/Project_Default.xml	(date 1672048586972)
+@@ -0,0 +1,6 @@
++<component name="InspectionProjectProfileManager">
++  <profile version="1.0">
++    <option name="myName" value="Project Default" />
++    <inspection_tool class="Eslint" enabled="true" level="WARNING" enabled_by_default="true" />
++  </profile>
++</component>
+Index: .idea/modules.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- .idea/modules.xml	(date 1672048586946)
++++ .idea/modules.xml	(date 1672048586946)
+@@ -0,0 +1,8 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<project version="4">
++  <component name="ProjectModuleManager">
++    <modules>
++      <module fileurl="file://$PROJECT_DIR$/.idea/wa-automate-nodejs.iml" filepath="$PROJECT_DIR$/.idea/wa-automate-nodejs.iml" />
++    </modules>
++  </component>
++</project>

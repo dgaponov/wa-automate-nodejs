@@ -35,7 +35,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.setupSocketServer = exports.setupBotPressHandler = exports.setupChatwoot = exports.setupTwilioCompatibleWebhook = exports.setupMediaMiddleware = exports.listListeners = exports.getCommands = exports.setupRefocusDisengageMiddleware = exports.setupSwaggerStatsMiddleware = exports.setupApiDocs = exports.setupAuthenticationLayer = exports.enableCORSRequests = exports.setUpExpressApp = exports.setupHttpServer = exports.server = exports.app = void 0;
+exports.setupSocketServer = exports.setupBotPressHandler = exports.setupChatwoot = exports.setupTwilioCompatibleWebhook = exports.setupTunnel = exports.setupMediaMiddleware = exports.listListeners = exports.getCommands = exports.setupMetaProcessMiddleware = exports.setupRefocusDisengageMiddleware = exports.setupSwaggerStatsMiddleware = exports.setupApiDocs = exports.setupAuthenticationLayer = exports.enableCORSRequests = exports.setUpExpressApp = exports.setupHttpServer = exports.server = exports.app = void 0;
 //@ts-ignore
 const express_1 = __importDefault(require("express"));
 const https_1 = __importDefault(require("https"));
@@ -52,8 +52,11 @@ const xmlbuilder2_1 = require("xmlbuilder2");
 const chatwoot_1 = require("./integrations/chatwoot");
 const express_ipfilter_1 = require("express-ipfilter");
 const helmet_1 = __importDefault(require("helmet"));
+const localtunnel_1 = __importDefault(require("localtunnel"));
+const child_process_1 = require("child_process");
 exports.app = (0, express_1.default)();
 exports.server = http_1.default.createServer(exports.app);
+let tunnel;
 const trimChatId = (chatId) => chatId.replace("@c.us", "").replace("@g.us", "");
 const socketListenerCallbacks = {};
 // const existingListeners = () => Object.keys(Object.keys(socketListenerCallbacks).flatMap(id=>Object.keys(socketListenerCallbacks[id])).reduce((acc,curr)=>{acc[curr]=true;return acc},{}))
@@ -243,6 +246,69 @@ const setupMetaMiddleware = () => {
         }
     }));
 };
+const setupMetaProcessMiddleware = (client, cliConfig) => {
+    /**
+     * Kill the client. End the process.
+     */
+    let closing = false;
+    const nuke = (req, res, restart) => __awaiter(void 0, void 0, void 0, function* () {
+        res.set("Connection", "close");
+        res.send(closing ? `Already closing! Stop asking!!` : 'Closing after connections closed. Waiting max 5 seconds');
+        res.end();
+        res.connection.end();
+        res.connection.destroy();
+        if (closing)
+            return;
+        closing = true;
+        yield client.kill("API_KILL");
+        __1.log.info("Waiting for maximum ");
+        if (tunnel && tunnel.close && typeof tunnel.close === 'function')
+            tunnel.close();
+        yield Promise.race([
+            new Promise((resolve) => exports.server.close(() => {
+                console.log('Server closed');
+                resolve(true);
+            })),
+            new Promise(resolve => setTimeout(resolve, 5000, 'timeout'))
+        ]);
+        if (process.env.pm_id && process.env.PM2_USAGE) {
+            const cmd = `pm2 ${restart ? 'restart' : 'stop'} ${process.env.pm_id}`;
+            __1.log.info(`PM2 DETECTED, RUNNING COMMAND: ${cmd}`);
+            const cmda = cmd.split(' ');
+            (0, child_process_1.spawn)(cmda[0], cmda.splice(1), { stdio: 'inherit' });
+        }
+        else {
+            if (restart)
+                setTimeout(function () {
+                    process.on("exit", function () {
+                        (0, child_process_1.spawn)(process.argv.shift(), process.argv, {
+                            cwd: process.cwd(),
+                            detached: true,
+                            stdio: "inherit"
+                        });
+                    });
+                    process.exit();
+                }, 5000);
+            else
+                process.exit(restart ? 0 : 10);
+        }
+    });
+    /**
+     * Exit code 10 will prevent pm2 process from auto-restarting
+     */
+    exports.app.post('/meta/process/exit', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        return yield nuke(req, res, false);
+    }));
+    /**
+     * Will only restart if the process is managed by pm2
+     *
+     * Note: Only works when `--pm2` flag is enabled.
+     */
+    exports.app.post('/meta/process/restart', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        return yield nuke(req, res, true);
+    }));
+};
+exports.setupMetaProcessMiddleware = setupMetaProcessMiddleware;
 const getCommands = () => Object.entries(collections_1.collections['swagger'].paths).reduce((acc, [key, value]) => { var _a, _b, _c, _d; acc[key.replace("/", "")] = ((_d = (_c = (_b = (_a = value === null || value === void 0 ? void 0 : value.post) === null || _a === void 0 ? void 0 : _a.requestBody) === null || _b === void 0 ? void 0 : _b.content["application/json"]) === null || _c === void 0 ? void 0 : _c.example) === null || _d === void 0 ? void 0 : _d.args) || {}; return acc; }, {});
 exports.getCommands = getCommands;
 const listListeners = () => {
@@ -253,6 +319,16 @@ const setupMediaMiddleware = () => {
     exports.app.use("/media", express_1.default.static('media'));
 };
 exports.setupMediaMiddleware = setupMediaMiddleware;
+const setupTunnel = (cliConfig, tunnelCode, PORT) => __awaiter(void 0, void 0, void 0, function* () {
+    tunnel = yield (0, localtunnel_1.default)({
+        port: PORT,
+        host: process.env.WA_TUNNEL_SERVER || "https://public.openwa.cloud",
+        subdomain: tunnelCode
+    });
+    cliConfig.apiHost = cliConfig.tunnel = tunnel.url;
+    return tunnel.url;
+});
+exports.setupTunnel = setupTunnel;
 const setupTwilioCompatibleWebhook = (cliConfig, client) => {
     const url = cliConfig.twilioWebhook;
     client.onMessage((message) => __awaiter(void 0, void 0, void 0, function* () {

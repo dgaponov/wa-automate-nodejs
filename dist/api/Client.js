@@ -1847,7 +1847,7 @@ class Client {
      */
     sendPtt(to, file, quotedMsgId) {
         return __awaiter(this, void 0, void 0, function* () {
-            return this.sendImage(to, file, 'ptt.ogg', '', quotedMsgId, true, true);
+            return this.sendImage(to, file, 'ptt.ogg', '', quotedMsgId ? quotedMsgId : null, true, true);
         });
     }
     /**

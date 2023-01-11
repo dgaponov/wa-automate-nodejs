@@ -271,7 +271,10 @@ function create(config = {}) {
                 _serialized: earlyWid
             }, debugInfo, spinner);
             if (authenticated == 'timeout') {
-                const outOfReach = yield Promise.race([(0, auth_1.phoneIsOutOfReach)(waPage), (0, exports.timeout)(20 * 1000)]);
+                const oorProms = [(0, auth_1.phoneIsOutOfReach)(waPage)];
+                if ((config === null || config === void 0 ? void 0 : config.oorTimeout) !== 0)
+                    oorProms.push((0, exports.timeout)(((config === null || config === void 0 ? void 0 : config.oorTimeout) || 60) * 1000));
+                const outOfReach = yield Promise.race(oorProms);
                 spinner.emit(outOfReach && outOfReach !== 'timeout' ? 'appOffline' : 'authTimeout');
                 spinner.fail(outOfReach && outOfReach !== 'timeout' ? 'Authentication timed out. Please open the app on the phone. Shutting down' : 'Authentication timed out. Shutting down. Consider increasing authTimeout config variable: https://open-wa.github.io/wa-automate-nodejs/interfaces/configobject.html#authtimeout');
                 yield (0, browser_1.kill)(waPage);

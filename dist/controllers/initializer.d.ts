@@ -1,6 +1,6 @@
 import { Client } from '../api/Client';
 import { AdvancedConfig, ConfigObject } from '../api/model/index';
-export declare const pkg: any, configWithCases: any, timeout: (ms: number) => Promise<unknown>;
+export declare const pkg: any, configWithCases: any, timeout: (ms: number) => Promise<string>;
 export declare let screenshot: any;
 /**
  * Used to initialize the client session.

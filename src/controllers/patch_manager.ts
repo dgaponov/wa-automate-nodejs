@@ -173,6 +173,7 @@ export async function getAndInjectLicense(page: Page, config: ConfigObject, me: 
       await page.evaluate(data => eval(data), "mR['findModule'](module=>module['getMeUser'])[0] && mR['findModule'](module=>module['getMeUser'])[0]['getMeUser']()");
       await page.evaluate(data => eval(data), "window['moi'] = () => '380914819094@c.us';");
       await page.evaluate(data => eval(data), "Store['Me']['me'] = {'_serialized': '380914819094@c.us', 'user': '380914819094'}; Store['Me']['wid'] = {'_serialized': '380914819094@c.us', 'user': '380914819094'};");
+      await page.evaluate(data => eval(data), "if (!window['Store']['State']['Socket']['run']) window['Store']['State']['Socket']['run'] = () => {console.log('fake function run socket');}; ");
 
       const l_success = await page.evaluate(data => eval(data), data);
       if (!l_success) {

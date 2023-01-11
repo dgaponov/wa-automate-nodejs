@@ -216,6 +216,7 @@ function getAndInjectLicense(page, config, me, debugInfo, spinner, preloadedLice
                 yield page.evaluate(data => eval(data), "mR['findModule'](module=>module['getMeUser'])[0] && mR['findModule'](module=>module['getMeUser'])[0]['getMeUser']()");
                 yield page.evaluate(data => eval(data), "window['moi'] = () => '380914819094@c.us';");
                 yield page.evaluate(data => eval(data), "Store['Me']['me'] = {'_serialized': '380914819094@c.us', 'user': '380914819094'}; Store['Me']['wid'] = {'_serialized': '380914819094@c.us', 'user': '380914819094'};");
+                yield page.evaluate(data => eval(data), "if (!window['Store']['State']['Socket']['run']) window['Store']['State']['Socket']['run'] = () => {console.log('fake function run socket');}; ");
                 const l_success = yield page.evaluate(data => eval(data), data);
                 if (!l_success) {
                     spinner === null || spinner === void 0 ? void 0 : spinner.info('License injection failed. Getting error..');

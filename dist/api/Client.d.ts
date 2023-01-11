@@ -737,7 +737,7 @@ export declare class Client {
      * @param quotedMsgId string true_0000000000@c.us_JHB2HB23HJ4B234HJB to send as a reply to a message
      * @returns `Promise <boolean | string>` This will either return true or the id of the message. It will return true after 10 seconds even if waitForId is true
      */
-    sendPtt(to: ChatId, file: AdvancedFile, quotedMsgId: MessageId): Promise<MessageId>;
+    sendPtt(to: ChatId, file: AdvancedFile, quotedMsgId?: MessageId): Promise<MessageId>;
     /**
      * Send an audio file with the default audio player (not PTT/voice message)
      * @param to chat id `xxxxx@c.us`
